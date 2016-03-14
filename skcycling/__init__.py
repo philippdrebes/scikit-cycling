@@ -38,8 +38,9 @@ Your install of scikit-image appears to be broken. """
 
 
 def _raise_build_error(e):
+    import os.path as osp
     # Raise a comprehensible error
-    local_dir = os.path.split(__file__)[0]
+    local_dir = osp.split(__file__)[0]
     msg = _STANDARD_MSG
     if local_dir == "skcycling":
         # Picking up the local install: this will work only if
