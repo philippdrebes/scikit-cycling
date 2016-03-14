@@ -27,8 +27,8 @@ env:
     - OMP_NUM_THREADS=4
     - OPENBLAS_NUM_THREADS=4
   matrix:
-    # This environment tests the oldest supported anaconda env
-    - DISTRIB="conda" PYTHON_VERSION="2.7"
+    # This environment tests the using anaconda
+    - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true"
       NUMPY_VERSION="1.9.3" SCIPY_VERSION="0.16.0"
       CACHED_BUILD_DIR="$HOME/skcycling_build_conda"
 
