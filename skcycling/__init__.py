@@ -25,48 +25,6 @@ __version__ = '0.1.dev0'
 
 pkg_dir = os.path.abspath(os.path.dirname(__file__))
 
-try:
-    imp.find_module('nose')
-except ImportError:
-    def _test(doctest=False, verbose=False):
-        """This would run all unit tests, but nose couldn't be
-        imported so the test suite can not run.
-        """
-        raise ImportError("Could not load nose. Unit tests not available.")
-
-else:
-    def _test(doctest=False, verbose=False):
-        """Run all unit tests."""
-        import nose
-        args = ['', pkg_dir, '--exe', '--ignore-files=^_test']
-        if verbose:
-            args.extend(['-v', '-s'])
-        if doctest:
-            args.extend(['--with-doctest', '--ignore-files=^\.',
-                         '--ignore-files=^setup\.py$$', '--ignore-files=test'])
-            # Make sure warnings do not break the doc tests
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                success = nose.run('skcycling', argv=args)
-        else:
-            success = nose.run('skcycling', argv=args)
-        # Return sys.exit code
-        if success:
-            return 0
-        else:
-            return 1
-
-# do not use `test` as function name as this leads to a recursion problem with
-# the nose test suite
-test = _test
-test_verbose = functools.partial(test, verbose=True)
-test_verbose.__doc__ = test.__doc__
-doctest = functools.partial(test, doctest=True)
-doctest.__doc__ = doctest.__doc__
-doctest_verbose = functools.partial(test, doctest=True, verbose=True)
-doctest_verbose.__doc__ = doctest.__doc__
-
-
 # Logic for checking for improper install and importing while in the source
 # tree when package has not been installed inplace.
 # Code adapted from scikit-learn's __check_build module.
@@ -84,8 +42,8 @@ def _raise_build_error(e):
     local_dir = os.path.split(__file__)[0]
     msg = _STANDARD_MSG
     if local_dir == "skcycling":
-        # Picking up the local install: this will work only if the
-        # install is an 'inplace build'
+        # Picking up the local install: this will work only if
+        # the install is an 'inplace build'
         msg = _INPLACE_MSG
     raise ImportError("""%s
 It seems that scikit-image has not been built correctly.
