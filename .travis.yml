@@ -17,6 +17,7 @@ addons:
     packages:
       - libatlas3gf-base
       - libatlas-dev
+      - gfortran
 env:
   global:
     # Directory where tests are run from
