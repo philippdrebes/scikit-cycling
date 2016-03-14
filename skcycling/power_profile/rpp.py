@@ -10,8 +10,6 @@ from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 
 from joblib import Parallel, delayed
-import multiprocessing
-
 
 from ..utils.checker import _check_X
 
@@ -513,7 +511,7 @@ class Rpp(object):
         elif method == 'lm':
             # Perform the fitting using non-linear least-square
             # Levenberg-Marquardt
-            popt, pcov = curve_fit(linear_model, np.log(ts), rpp)
+            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
 
             slope = popt[0]
             intercept = popt[1]
