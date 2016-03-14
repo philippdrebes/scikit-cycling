@@ -47,9 +47,9 @@ else:
             # Make sure warnings do not break the doc tests
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                success = nose.run('skimage', argv=args)
+                success = nose.run('skcycling', argv=args)
         else:
-            success = nose.run('skimage', argv=args)
+            success = nose.run('skcycling', argv=args)
         # Return sys.exit code
         if success:
             return 0
@@ -71,14 +71,12 @@ doctest_verbose.__doc__ = doctest.__doc__
 # tree when package has not been installed inplace.
 # Code adapted from scikit-learn's __check_build module.
 _INPLACE_MSG = """
-It appears that you are importing a local scikit-image source tree. For
+It appears that you are importing a local scikit-cycling source tree. For
 this, you need to have an inplace install. Maybe you are in the source
 directory and you need to try from another location."""
 
 _STANDARD_MSG = """
-Your install of scikit-image appears to be broken.
-Try re-installing the package following the instructions at:
-http://scikit-image.org/docs/stable/install.html """
+Your install of scikit-image appears to be broken. """
 
 
 def _raise_build_error(e):
@@ -107,11 +105,10 @@ if __SKCYCLING_SETUP__:
     # process, as it may not be compiled yet
 else:
     try:
-        from ._shared import geometry
-        del geometry
+        from power_profile import Rpp
+        del Rpp
     except ImportError as e:
         _raise_build_error(e)
-    from .util.dtype import *
 
 if sys.version.startswith('2.6'):
     msg = ("Python 2.6 is deprecated and will not be supported in "
