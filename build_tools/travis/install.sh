@@ -81,5 +81,7 @@ python setup.py develop
 
 # Install python-fitparse
 cd $CACHED_BUILD_DIR/scikit-cycling/third-party/python-fitparse
-ls
 python setup.py install
+
+# Go back to the scikit-cycling directory to run the test
+cd $CACHED_BUILD_DIR/scikit-cycling
