@@ -1,3 +1,7 @@
+"""
+Methods to handle input/output files.
+"""
+
 import numpy as np
 
 from fitparse import FitFile

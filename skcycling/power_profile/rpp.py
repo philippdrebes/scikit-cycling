@@ -1,3 +1,7 @@
+"""Record power-profile
+
+This module contains class and methods related to the record power-profile.
+"""
 import numpy as np
 
 from scipy.interpolate import UnivariateSpline
