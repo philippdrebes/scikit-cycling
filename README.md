@@ -1,7 +1,7 @@
 Scikit-cycling
 =========
 
-[![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master)
+[![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master) [![Coverage Status](https://coveralls.io/repos/github/glemaitre/scikit-cycling/badge.svg?branch=master)](https://coveralls.io/github/glemaitre/scikit-cycling?branch=master)
 
 #### Manifesto
 
