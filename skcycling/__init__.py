@@ -21,7 +21,7 @@ import functools
 import warnings
 import sys
 
-__version__ = '0.1dev'
+__version__ = '0.1.dev0'
 
 pkg_dir = osp.abspath(osp.dirname(__file__))
 
@@ -104,15 +104,9 @@ if __SKCYCLING_SETUP__:
     # We are not importing the rest of the scikit during the build
     # process, as it may not be compiled yet
 else:
-    try:
-        from power_profile import Rpp
-        del Rpp
-    except ImportError as e:
-        _raise_build_error(e)
-
-if sys.version.startswith('2.6'):
-    msg = ("Python 2.6 is deprecated and will not be supported in "
-           "scikit-cycling 0.1+")
-    warnings.warn(msg, stacklevel=2)
+    __all__ = ['metrics',
+               'power_profile',
+               'restoration',
+               'utils']
 
 del warnings, functools, osp, imp, sys
