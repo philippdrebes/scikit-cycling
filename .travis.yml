@@ -2,7 +2,8 @@
 sudo: false
 
 language: python
-
+python:
+  - 2.7
 # Pre-install packages for the ubuntu distribution
 cache:
   apt: true
@@ -18,6 +19,7 @@ addons:
       - libatlas3gf-base
       - libatlas-dev
       - gfortran
+      - libgfortran3
 env:
   global:
     # Directory where tests are run from

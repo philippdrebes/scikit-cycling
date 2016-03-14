@@ -57,6 +57,9 @@ if [[ "$DISTRIB" == "conda" ]]; then
 
     # Install nose-timer via pip
     pip install nose-timer
+
+    # Install libgfortran with conda
+    conda install libgfortran
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
