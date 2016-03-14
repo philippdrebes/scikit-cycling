@@ -10,7 +10,6 @@ cache:
   # to work around a Travis bug with multi-platform cache
   directories:
   - $HOME/skcycling_build_conda
-  - $HOME/sklearn_build_numpy_dev
   - $HOME/.cache/pip
   - $HOME/download
 addons:
@@ -21,7 +20,7 @@ addons:
 env:
   global:
     # Directory where tests are run from
-    - TEST_DIR=/tmp/sklearn
+    - TEST_DIR=/tmp/skcycling
     - OMP_NUM_THREADS=4
     - OPENBLAS_NUM_THREADS=4
   matrix:
