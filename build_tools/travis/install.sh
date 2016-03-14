@@ -78,4 +78,8 @@ python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
 python setup.py develop
-python ./third-party/python-fitparse/setup.py install
+
+# Install python-fitparse
+cd $CACHED_BUILD_DIR/scikit-cycling/third-party/python-fitparse
+ls
+python setup.py install
