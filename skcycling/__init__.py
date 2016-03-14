@@ -15,15 +15,15 @@ utils
     Utility to read and save cycling ride.
 """
 
-import os.path as osp
+import os
 import imp
 import functools
-import warnings
+import warnings as wn
 import sys
 
 __version__ = '0.1.dev0'
 
-pkg_dir = osp.abspath(osp.dirname(__file__))
+pkg_dir = os.path.abspath(os.path.dirname(__file__))
 
 try:
     imp.find_module('nose')
@@ -45,8 +45,8 @@ else:
             args.extend(['--with-doctest', '--ignore-files=^\.',
                          '--ignore-files=^setup\.py$$', '--ignore-files=test'])
             # Make sure warnings do not break the doc tests
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
+            with wn.catch_warnings():
+                wn.simplefilter("ignore")
                 success = nose.run('skcycling', argv=args)
         else:
             success = nose.run('skcycling', argv=args)
@@ -81,7 +81,7 @@ Your install of scikit-image appears to be broken. """
 
 def _raise_build_error(e):
     # Raise a comprehensible error
-    local_dir = osp.split(__file__)[0]
+    local_dir = os.path.split(__file__)[0]
     msg = _STANDARD_MSG
     if local_dir == "skcycling":
         # Picking up the local install: this will work only if the
@@ -100,7 +100,7 @@ except NameError:
     __SKCYCLING_SETUP__ = False
 
 if __SKCYCLING_SETUP__:
-    sys.stderr.write('Partial import of skimage during the build process.\n')
+    sys.stderr.write('Partial import of skcycling during the build process.\n')
     # We are not importing the rest of the scikit during the build
     # process, as it may not be compiled yet
 else:
@@ -109,4 +109,4 @@ else:
                'restoration',
                'utils']
 
-del warnings, functools, osp, imp, sys
+del wn, functools, os, imp, sys
