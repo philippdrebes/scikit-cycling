@@ -1,7 +1,7 @@
 """Cycling Processing Toolbox (Toolbox for SciPy)
 
-``scikit-cycling`` (a.k.a ``skcycling``) is a set of python methods to analyse file
-extracted from powermeters.
+``scikit-cycling`` (a.k.a ``skcycling``) is a set of python methods to
+analyse file extracted from powermeters.
 
 Subpackages
 -----------
@@ -18,7 +18,7 @@ utils
 import os
 import imp
 import functools
-import warnings as wn
+import warnings
 import sys
 
 __version__ = '0.1.dev0'
@@ -45,8 +45,8 @@ else:
             args.extend(['--with-doctest', '--ignore-files=^\.',
                          '--ignore-files=^setup\.py$$', '--ignore-files=test'])
             # Make sure warnings do not break the doc tests
-            with wn.catch_warnings():
-                wn.simplefilter("ignore")
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
                 success = nose.run('skcycling', argv=args)
         else:
             success = nose.run('skcycling', argv=args)
@@ -109,4 +109,4 @@ else:
                'restoration',
                'utils']
 
-del wn, functools, os, imp, sys
+del warnings, functools, os, imp, sys

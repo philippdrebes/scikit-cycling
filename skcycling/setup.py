@@ -17,11 +17,14 @@ def configuration(parent_package='', top_path=None):
 
     # Add test directories
     from os.path import isdir, dirname, join
-    rel_isdir = lambda d: isdir(join(curpath, d))
+
+    def rel_isdir(curpath, d):
+        return isdir(join(curpath, d))
 
     curpath = join(dirname(__file__), './')
-    subdirs = [join(d, 'tests') for d in os.listdir(curpath) if rel_isdir(d)]
-    subdirs = [d for d in subdirs if rel_isdir(d)]
+    subdirs = [join(d, 'tests') for d in os.listdir(curpath)
+               if rel_isdir(curpath, d)]
+    subdirs = [d for d in subdirs if rel_isdir(curpath, d)]
     for test_dir in subdirs:
         config.add_data_dir(test_dir)
     return config

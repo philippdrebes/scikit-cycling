@@ -1,18 +1,7 @@
 #! /usr/bin/env python
-
-descr = """A set of python modules for cyclist using powermeters"""
+"""A set of python modules for cyclist using powermeters"""
 
 from setuptools import setup, find_packages
-
-DISTNAME = 'scikit-cycling'
-DESCRIPTION = 'A set of python modules for cyclist using powermeters'
-LONG_DESCRIPTION = descr
-MAINTAINER = 'Guillaume Lemaitre'
-MAINTAINER_EMAIL = 'g.lemaitre58@gmail.com'
-URL = 'https://github.com/glemaitre/scikit-cycling'
-LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/glemaitre/scikit-cycling'
-
 import os
 import sys
 
@@ -23,6 +12,17 @@ if sys.version_info[0] < 3:
     import __builtin__ as builtins
 else:
     import builtins
+
+descr = """A set of python modules for cyclist using powermeters"""
+
+DISTNAME = 'scikit-cycling'
+DESCRIPTION = 'A set of python modules for cyclist using powermeters'
+LONG_DESCRIPTION = descr
+MAINTAINER = 'Guillaume Lemaitre'
+MAINTAINER_EMAIL = 'g.lemaitre58@gmail.com'
+URL = 'https://github.com/glemaitre/scikit-cycling'
+LICENSE = 'new BSD'
+DOWNLOAD_URL = 'https://github.com/glemaitre/scikit-cycling'
 
 # This is a bit (!) hackish: we are setting a global variable so that the main
 # skimage __init__ can detect if it is being loaded by the setup routine, to
@@ -118,8 +118,7 @@ if __name__ == "__main__":
                      'Operating System :: MacOS',
                      'Programming Language :: Python :: 2',
                      'Programming Language :: Python :: 2.6',
-                     'Programming Language :: Python :: 2.7',
-        ],
+                     'Programming Language :: Python :: 2.7'],
         install_requires=INSTALL_REQUIRES,
         requires=REQUIRES,
         packages=setuptools.find_packages(exclude=['doc']),
