@@ -21,9 +21,9 @@ python -c "import scipy; print('scipy %s' % scipy.__version__)"
 python -c "import multiprocessing as mp; print('%d CPUs' % mp.cpu_count())"
 
 if [[ "$COVERAGE" == "true" ]]; then
-   nosetests -s --with-coverage --with-timer --timer-top-n 20 sklearn
+   nosetests -s --with-coverage --with-timer --timer-top-n 20 skcycling
 else
-   nosetests -s --with-timer --timer-top-n 20 sklearn
+   nosetests -s --with-timer --timer-top-n 20 skcycling
 fi
 
 # Is directory still empty ?
