@@ -70,7 +70,7 @@ fi
 rsync -av --exclude '.git/' --exclude='testvenv/' \
       $TRAVIS_BUILD_DIR $CACHED_BUILD_DIR
 
-cd $CACHED_BUILD_DIR/scikit-learn
+cd $CACHED_BUILD_DIR/scikit-cycling
 
 # Build scikit-cycling in the install.sh script to collapse the verbose
 # build output in the travis output when it succeeds.
