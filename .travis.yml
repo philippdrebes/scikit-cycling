@@ -1,30 +1,35 @@
-# vim ft=yaml
-
-# After changing this file, check it on:
-#   http://yaml-online-parser.appspot.com/
-
-# See doc/travis_notes.txt for some guidelines
+# make it explicit that we favor the new container-based travis workers
+sudo: false
 
 language: python
-sudo: false
+
+# Pre-install packages for the ubuntu distribution
 cache:
-  # See http://docs.travis-ci.com/user/caching/#pip-cache
+  apt: true
+  # We use three different cache directory
+  # to work around a Travis bug with multi-platform cache
   directories:
-    - $HOME/.cache/pip
-python:
-  - 2.6
-  - 2.7
+  - $HOME/skcycling_build_conda
+  - $HOME/sklearn_build_numpy_dev
+  - $HOME/.cache/pip
+  - $HOME/download
+addons:
+  apt:
+    packages:
+      - libatlas3gf-base
+      - libatlas-dev
+env:
+  global:
+    # Directory where tests are run from
+    - TEST_DIR=/tmp/sklearn
+    - OMP_NUM_THREADS=4
+    - OPENBLAS_NUM_THREADS=4
+  matrix:
+    # This environment tests the oldest supported anaconda env
+    - DISTRIB="conda" PYTHON_VERSION="2.7"
+      NUMPY_VERSION="1.9.3" SCIPY_VERSION="0.16.0"
+      CACHED_BUILD_DIR="$HOME/skcycling_build_conda"
 
-before_install:
-    - source tools/travis_before_install.sh
-    - which python; python --version
-    - tools/build_versions.py
-
-install:
-    - python setup.py develop
-
-script: tools/travis_script.sh
-
-after_success:
-    - coveralls
-    - bash tools/deploy_docs.sh
+install: source build_tools/travis/install.sh
+script: bash build_tools/travis/test_script.sh
+after_success: source build_tools/travis/after_success.sh
