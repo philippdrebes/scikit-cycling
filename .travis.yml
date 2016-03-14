@@ -1,7 +1,30 @@
+# vim ft=yaml
+
+# After changing this file, check it on:
+#   http://yaml-online-parser.appspot.com/
+
+# See doc/travis_notes.txt for some guidelines
+
 language: python
+sudo: false
+cache:
+  # See http://docs.travis-ci.com/user/caching/#pip-cache
+  directories:
+    - $HOME/.cache/pip
 python:
-  - "2.7"
-# command to install dependencies
+  - 2.6
+  - 2.7
+
+before_install:
+    - source tools/travis_before_install.sh
+    - which python; python --version
+    - tools/build_versions.py
+
 install:
-# command to run tests
-script: nosetests
+    - python setup.py develop
+
+script: tools/travis_script.sh
+
+after_success:
+    - coveralls
+    - bash tools/deploy_docs.sh
