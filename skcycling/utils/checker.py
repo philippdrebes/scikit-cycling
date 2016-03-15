@@ -16,8 +16,9 @@ def _check_X(X):
     if len(X.shape) is not 1:
         raise ValueError('The shape of X is not consistent.'
                          ' It should be a 1D numpy vector.')
+
     # Check that X is of type float
-    if X.dtype is not 'np.float64':
+    if X.dtype != np.float64:
         X = X.astype(np.float64)
 
     return X
@@ -33,7 +34,7 @@ def _check_float(X):
     """
 
     # Check that the value is a float
-    if type(X) is not np.float64:
+    if type(X) is not float:
         return np.float(X)
     else:
         return X

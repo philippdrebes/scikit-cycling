@@ -22,6 +22,13 @@ def test_check_X_convert_float():
     """ Test if array X is converted into float if the input is not. """
 
     X_out = _check_X(np.random.randint(0, high=100, size=(100, )))
+    assert_equal(X_out.dtype, np.float64)
+
+
+def test_check_X_np_float64():
+    """ Test everything goes fine with numpy double. """
+
+    X_out = _check_X(np.random.random((100, )))
 
     assert_equal(X_out.dtype, np.float64)
 

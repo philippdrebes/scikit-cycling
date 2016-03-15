@@ -33,9 +33,6 @@ def load_power_from_fit(filename):
 
     # Get only the power records
     records = list(activity.get_messages(name='record'))
-    # Check that you have some records to analyse
-    if len(records) == 0:
-        raise ValueError('There is no data inside the FIT file.')
 
     # Append the different values inside a list which will be later
     # converted to numpy array
