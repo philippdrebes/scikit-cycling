@@ -1,7 +1,7 @@
 Scikit-cycling
 =========
 
-[![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master) [![Coverage Status](https://coveralls.io/repos/github/glemaitre/scikit-cycling/badge.svg?branch=master)](https://coveralls.io/github/glemaitre/scikit-cycling?branch=master) [![Build Status](https://travis-ci.org/glemaitre/scikit-cycling.svg?branch=master)](https://travis-ci.org/glemaitre/scikit-cycling)
+[![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master) [![Coverage Status](https://coveralls.io/repos/github/glemaitre/scikit-cycling/badge.svg?branch=master)](https://coveralls.io/github/glemaitre/scikit-cycling?branch=master) [![Build Status](https://travis-ci.org/glemaitre/scikit-cycling.svg?branch=master)](https://travis-ci.org/glemaitre/scikit-cycling) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/ba315c8a63634cd6af7851d88db9fbcc/badge.svg)](https://www.quantifiedcode.com/app/project/ba315c8a63634cd6af7851d88db9fbcc)
 
 #### Manifesto
 
