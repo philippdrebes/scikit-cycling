@@ -47,8 +47,8 @@ def _raise_build_error(e):
         # the install is an 'inplace build'
         msg = _INPLACE_MSG
     raise ImportError("""%s
-It seems that scikit-image has not been built correctly.
-%s""" % (e, msg))
+    It seems that scikit-image has not been built correctly.
+    %s""" % (e, msg))
 
 try:
     # This variable is injected in the __builtins__ by the build

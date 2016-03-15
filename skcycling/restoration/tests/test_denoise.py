@@ -6,6 +6,8 @@ from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
+from nose.tools import assert_raises
+
 from skcycling.restoration import outliers_rejection
 from skcycling.restoration import moving_average
 
@@ -28,6 +30,11 @@ def test_outliers_thres_rejection():
 
     # Check if they are the same
     assert_array_almost_equal(X_free_outliers, X_comp)
+
+
+def test_outliers_unknown_method():
+    """ Test to check if an error is risen in case the method is unknown """
+    assert_raises(ValueError, outliers_rejection, pow_ride_1, '')
 
 
 def test_moving_average():
