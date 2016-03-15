@@ -70,5 +70,5 @@ def test_load_power_normal_file():
     currdir = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(currdir, 'data', '2013-04-24-22-22-25.fit')
 
-    X_loaded = load_power_from_fit(filename)
-    assert_array_equal(X_loaded, ride)
+    x_loaded = load_power_from_fit(filename)
+    assert_array_equal(x_loaded, ride)

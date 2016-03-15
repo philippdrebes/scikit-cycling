@@ -12,25 +12,25 @@ from skcycling.utils import _check_X
 from skcycling.utils import _check_float
 
 
-def test_check_X_not_vector():
+def test_check_x_not_vector():
     """ Test if an error is risen if X is not a vector. """
 
     assert_raises(ValueError, _check_X, np.ones((10, 2)))
 
 
-def test_check_X_convert_float():
+def test_check_x_convert_float():
     """ Test if array X is converted into float if the input is not. """
 
-    X_out = _check_X(np.random.randint(0, high=100, size=(100, )))
-    assert_equal(X_out.dtype, np.float64)
+    x_out = _check_X(np.random.randint(0, high=100, size=(100, )))
+    assert_equal(x_out.dtype, np.float64)
 
 
-def test_check_X_np_float64():
+def test_check_x_np_float64():
     """ Test everything goes fine with numpy double. """
 
-    X_out = _check_X(np.random.random((100, )))
+    x_out = _check_X(np.random.random((100, )))
 
-    assert_equal(X_out.dtype, np.float64)
+    assert_equal(x_out.dtype, np.float64)
 
 
 def test_check_float_convertion():
