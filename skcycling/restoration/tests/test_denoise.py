@@ -6,8 +6,6 @@ from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
-from nose.tools import assert_raises
-
 from skcycling.restoration import outliers_rejection
 from skcycling.restoration import moving_average
 
