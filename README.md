@@ -10,34 +10,62 @@ Because *Human* is **perfectible** and **error-prone**, because *Science* should
 Goal
 ----
 
-This toolbox will aggregate some machine learning tools from all the walk of lives in order to fast prototype.
+This toolbox will aggregate some useful tools to read into power data acquired by cyclists.
 
 File Structure
 --------------
 
 ```
 .
-├── doc
+├── build_tools
+│   └── travis
 ├── LICENSE
-├── skcycling
+├── Makefile
 ├── README.md
-└── setup.py
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+├── skcycling
+│   ├── __init__.py
+│   ├── metrics
+│   ├── power_profile
+│   ├── restoration
+│   ├── setup.py
+│   └── utils
+└── third-party
+    └── python-fitparse
 ```
 
 Installation
 ------------
-
-### Cloning
-
-You can clone this repository with the usual `git clone`.
 
 ### Dependencies
 
 This package needs the following dependencies:
 
 * Numpy,
-* Scipy.
+* Scipy,
+* Joblib,
+* Fitparse.
+
+The package `fitparse` is part of this repository as a submodule. Follow the cloning and install procedure.
+
+### Cloning
+
+You can clone this repository with the usual `git clone --recursive`.
 
 ### Installation
 
-You need to run the command `python setup.py install`.
+First, install the `fitparse` package attached as a submodule.
+
+```
+cd third-party/python-fitparse
+python setup.py install
+```
+
+Then, go back to the root directory and install `skcycling`.
+
+```
+cd ../../
+python setup.py install
+```
