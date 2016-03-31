@@ -14,8 +14,13 @@ def load_power_from_fit(filename):
 
     Parameters
     ----------
-    filename: str,
+    filename : str,
         Path to the FIT file.
+
+    Return
+    ------
+    power_rec : ndarray, shape (n_samples)
+        Power records of the ride.
     """
 
     # Check that the filename has the good extension
@@ -56,6 +61,6 @@ def load_power_from_fit(filename):
     # Through a warning if there is no power data found
     if len(records) == warn_sample:
         warnings.warn('This file does not contain any power data.'
-                      'Be aware.')
+                      ' Be aware.')
 
     return power_rec

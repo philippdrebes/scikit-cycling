@@ -4,6 +4,8 @@ This module contains class and methods related to the record power-profile.
 """
 import numpy as np
 
+import os
+
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import linregress
 from scipy.interpolate import interp1d
@@ -14,8 +16,16 @@ from joblib import Parallel, delayed
 from ..utils.checker import _check_X
 
 
-def _rpp_parallel(self, X, idx_t_rpp):
+def _rpp_parallel(X, idx_t_rpp):
     """ Function to compute the rpp in parallel
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_samples)
+        The power records.
+
+    idx_t_rpp : int
+        Index of the time to compute the rpp.
 
     Return
     ------
@@ -35,6 +45,54 @@ def _rpp_parallel(self, X, idx_t_rpp):
         return np.max(t_crop_mean)
     else:
         return 0
+
+
+def compute_ride_rpp(X, max_duration_rpp, in_parallel=True):
+    """ Compute the record power-profile
+
+    Parameters
+    ----------
+    X : array-like, shape (n_samples, )
+
+    in_parallel : boolean
+        If True, the rpp will be computed on all the available cores.
+
+    Return
+    ------
+    rpp : array-like, shape (n_samples, )
+        Array containing the record power-profile of the current ride.
+    """
+
+    # Check that X is proper
+    X = _check_X(X)
+
+    if in_parallel is not True:
+        # Initialize the ride rpp
+        rpp = np.zeros(60 * max_duration_rpp)
+
+        # For each duration in the rpp
+        for idx_t_rpp in range(rpp.size):
+            # Slice the data such that we can compute efficiently
+            # the mean later
+            t_crop = np.array([X[i:-idx_t_rpp + i:]
+                               for i in range(idx_t_rpp)])
+            # Check that there is some value cropped. In the case that
+            # the duration is longer than the file, the table crop is
+            # empty
+            if t_crop.size is not 0:
+                # Compute the mean for each of these samples
+                t_crop_mean = np.mean(t_crop, axis=0)
+                # Keep the best to store as rpp
+                rpp[idx_t_rpp] = np.max(t_crop_mean)
+
+        return rpp
+
+    else:
+        rpp = Parallel(n_jobs=-1)(delayed(_rpp_parallel)(X, idx_t_rpp)
+                                  for idx_t_rpp
+                                  in range(60 * max_duration_rpp))
+        # We need to make a conversion from list to numpy array
+        return np.array(rpp)
 
 
 class Rpp(object):
@@ -70,7 +128,7 @@ class Rpp(object):
         Cyclist weight.
     """
 
-    def __init__(self, max_duration_rpp, cyclist_weight=None):
+    def __init__(self, max_duration_rpp=None, cyclist_weight=None):
         self.max_duration_rpp = max_duration_rpp
         self.cyclist_weight = cyclist_weight
 
@@ -86,20 +144,22 @@ class Rpp(object):
         else:
             # First time that the fitting is called
             # Initalise the rpp_ variable
+            if self.max_duration_rpp is None:
+                raise ValueError('You should instantiate the object with a'
+                                 ' max duration for the rpp.')
             self.max_duration_rpp_ = self.max_duration_rpp
             self.cyclist_weight_ = self.cyclist_weight
             self.rpp_ = np.zeros(60 * self.max_duration_rpp)
             # If the weight is not None we can also initialize the
             # normalized rpp
             if self.cyclist_weight_ is not None:
-                self.rpp_norm_ = self.rpp_
+                self.rpp_norm_ = self.rpp_.copy()
             else:
                 self.rpp_norm_ = None
 
             return True
 
-    @classmethod
-    def load_from_npy(cls, filename, cyclist_weight=None):
+    def load_from_npy(self, filename, cyclist_weight=None):
         """ Load the record power-profile from an npy file
 
         Parameters
@@ -108,7 +168,7 @@ class Rpp(object):
             String containing the path to the NPY file containing the array
             representing the record power-profile.
 
-        cyclist_weight : float, default None
+        cyclist_weight : float or None, default None
             Float in order to normalise the record power-profile depending
             of its weight. By default this is None in order to avoid
             using the data from normalized rpp without this data.
@@ -119,23 +179,35 @@ class Rpp(object):
             Returns self
         """
 
+        # Check that the file exist first
+        if not os.path.isfile(filename):
+            raise ValueError('The file does not exist.')
+
+        # Check that the file is an npy file
+        if not filename.endswith('.npy'):
+            raise ValueError('The file should be an npy file.')
+
+        # Check that the cyclist weight is a float
+        if not (cyclist_weight is None or isinstance(cyclist_weight, float)):
+            raise ValueError('The cyclist weight need to be a float.')
+
         # Load the record power-profile
-        cls.rpp_ = np.load(filename)
+        self.rpp_ = np.load(filename)
 
         # We have to infer the duration of the rpp
-        max_duration_rpp = cls.rpp_.size / 60
-        cls.max_duration_rpp_ = max_duration_rpp
+        max_duration_rpp = self.rpp_.size / 60
+        self.max_duration_rpp_ = max_duration_rpp
 
         # Apply the cyclist weight
-        cls.cyclist_weight_ = cyclist_weight
+        self.cyclist_weight_ = cyclist_weight
 
         # Compute the normalized rpp if possible
-        if cls.cyclist_weight_ is not None:
-            cls.rpp_norm_ = cls.rpp_ / cls.cyclist_weight_
+        if self.cyclist_weight_ is not None:
+            self.rpp_norm_ = self.rpp_ / self.cyclist_weight_
         else:
-            cls.rpp_norm_ = None
+            self.rpp_norm_ = None
 
-        return cls(max_duration_rpp)
+        return self#(max_duration_rpp)
 
     def fit(self, X, in_parallel=True):
         """ Fit the data to the RPP
@@ -216,135 +288,65 @@ class Rpp(object):
         if self._check_partial_fit_first_call():
             # What to do if it was the first call
             # Compute the record power-profile for the given X
-            self.rpp_ = self._compute_ride_rpp(X,
-                                               self.max_duration_rpp_,
-                                               in_parallel)
+            self.rpp_ = compute_ride_rpp(X,
+                                         self.max_duration_rpp_,
+                                         in_parallel)
             # Compute the normalized rpp if we should
             if self.cyclist_weight_ is not None:
                 self.rpp_norm_ = self.rpp_ / self.cyclist_weight_
         else:
             # What to do if it was yet another call
             # Compute the record power-profile for the given X
-            self.rpp = self._compute_ride_rpp(X,
-                                              self.max_duration_rpp_,
-                                              in_parallel)
+            self.rpp = compute_ride_rpp(X,
+                                        self.max_duration_rpp_,
+                                        in_parallel)
             # Update the best record power-profile
-            self._update_rpp()
+            self.rpp_ = np.max((self.rpp, self.rpp_), axis=0)
             # Compute the normalized rpp if we should
             if self.cyclist_weight_ is not None:
                 self.rpp_norm_ = self.rpp_ / self.cyclist_weight_
+            else:
+                self.rpp_norm_ = None
 
         return self
 
-    @classmethod
-    def _compute_ride_rpp(cls, X, max_duration_rpp, in_parallel=True):
-        """ Compute the record power-profile
+    # def denoise_rpp(self, method='b-spline', normalized=False):
+    #     """ Denoise the record power-profile
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, )
+    #     Parameters
+    #     ----------
+    #     method : str, default 'b-spline'
+    #         Method to select to denoise the record power-profile.
 
-        in_parallel : boolean
-            If True, the rpp will be computed on all the available cores.
+    #     normalized : bool, default False
+    #         Return a weight-normalized rpp if True.
 
-        Return
-        ------
-        rpp : array-like, shape (n_samples, )
-            Array containing the record power-profile of the current ride.
-        """
+    #     Return
+    #     ------
+    #     rpp : array-like, shape (n_samples, )
+    #         Return a denoise record power-profile.
+    #     """
 
-        # Check that X is proper
-        X = _check_X(X)
+    #     if method == 'b-spline':
+    #         # Shall used the rpp or weight-normalized rpp
+    #         if normalized is True:
+    #             # Check that the cyclist weight was provided
+    #             if self.cyclist_weight_ is not None:
+    #                 rpp = self.rpp_norm_
+    #             else:
+    #                 raise ValueError('You cannot get a normalized rpp if the'
+    #                                  ' cyclist weight never has been given.')
+    #         else:
+    #             rpp = self.rpp_
 
-        if in_parallel is not True:
-            # Initialize the ride rpp
-            rpp = np.zeros(60 * max_duration_rpp)
+    #         # Apply denoising based on b-spline
+    #         # Create the timeline
+    #         t = np.linspace(0, self.max_duration_rpp_, rpp.size)
+    #         spl = UnivariateSpline(t, rpp)
 
-            # For each duration in the rpp
-            for idx_t_rpp in range(rpp.size):
-                # Slice the data such that we can compute efficiently
-                # the mean later
-                t_crop = np.array([X[i:-idx_t_rpp + i:]
-                                   for i in range(idx_t_rpp)])
-                # Check that there is some value cropped. In the case that
-                # the duration is longer than the file, the table crop is
-                # empty
-                if t_crop.size is not 0:
-                    # Compute the mean for each of these samples
-                    t_crop_mean = np.mean(t_crop, axis=0)
-                    # Keep the best to store as rpp
-                    rpp[idx_t_rpp] = np.max(t_crop_mean)
-
-            return rpp
-
-        else:
-            rpp = Parallel(n_jobs=-1)(delayed(_rpp_parallel)(cls, X, idx_t_rpp)
-                                      for idx_t_rpp
-                                      in range(60 * max_duration_rpp))
-            # We need to make a conversion from list to numpy array
-            return np.array(rpp)
-
-    def _update_rpp(self):
-        """ Update the record power-profile
-        """
-
-        # Create a local copy of the best rpp
-        b_rpp = self.rpp_.copy()
-
-        # We have to compare the ride rpp with the best rpp
-        for idx_rpp, (t_rpp, t_best_rpp) in enumerate(zip(self.rpp,
-                                                          self.rpp_)):
-            # Update the best rpp in case the power is greater
-            if t_rpp > t_best_rpp:
-                b_rpp[idx_rpp] = t_rpp
-
-        # Apply the copy
-        self.rpp_ = b_rpp.copy()
-
-        # In case that current rpp has an higher duration
-        # we can append the value
-        if len(self.rpp) > len(self.rpp_):
-            # Update the max duration of the rpp
-            self.rpp_ = np.append(self.rpp_, self.rpp[len(self.rpp_):])
-            self.max_duration_rpp_ = int(len(self.rpp_ / 60.))
-
-    def denoise_rpp(self, method='b-spline', normalized=False):
-        """ Denoise the record power-profile
-
-        Parameters
-        ----------
-        method : str, default 'b-spline'
-            Method to select to denoise the record power-profile.
-
-        normalized : bool, default False
-            Return a weight-normalized rpp if True.
-
-        Return
-        ------
-        rpp : array-like, shape (n_samples, )
-            Return a denoise record power-profile.
-        """
-
-        if method == 'b-spline':
-            # Shall used the rpp or weight-normalized rpp
-            if normalized is True:
-                # Check that the cyclist weight was provided
-                if self.cyclist_weight_ is not None:
-                    rpp = self.rpp_norm_
-                else:
-                    raise ValueError('You cannot get a normalized rpp if the'
-                                     ' cyclist weight never has been given.')
-            else:
-                rpp = self.rpp_
-
-            # Apply denoising based on b-spline
-            # Create the timeline
-            t = np.linspace(0, self.max_duration_rpp_, rpp.size)
-            spl = UnivariateSpline(t, rpp)
-
-            return spl(t)
-        else:
-            raise ValueError('This denoising method is not implemented.')
+    #         return spl(t)
+    #     else:
+    #         raise ValueError('This denoising method is not implemented.')
 
     def resampling_rpp(self, ts, method_interp='linear', normalized=False):
         """ Resampling the record power-profile
@@ -523,5 +525,7 @@ class Rpp(object):
             coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
                                                           slope,
                                                           intercept))
+        else:
+            raise NotImplementedError
 
         return slope, intercept, std_err, coeff_det
