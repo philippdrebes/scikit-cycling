@@ -93,6 +93,23 @@ def test_rpp_load_weight():
     assert_equal(my_rpp.cyclist_weight_, 60.)
 
 
+def test_fit_no_duration():
+    """ Test if an error is raised when the no fitting is called and
+    no duration is provided. """
+
+    # Create the path to read the npy file
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data',
+                            'fit_files', '2014-05-07-14-26-22.fit')
+
+    # Load the fit file
+    power_rec = load_power_from_fit(filename)
+
+    # Compute the rpp not in parallel
+    my_rpp = Rpp()
+    assert_raises(ValueError, my_rpp.fit, power_rec)
+
+
 def test_compute_ride_rpp_not_par():
     """ Test the routine to compute the ride Rpp not in parallel. """
 
@@ -417,3 +434,17 @@ def test_aerobic_meta_model_lm():
                         decimal=DECIMAL_PRECISION)
     assert_almost_equal(coeff_det, 0.94452595349498414,
                         decimal=DECIMAL_PRECISION)
+
+
+def test_aerobic_meta_model_unknown_method():
+    """ Test either if an error if the method used during
+    fitting is unknown. """
+
+    # Read the profile data
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data', 'profile.npy')
+
+    # Read the profile
+    my_rpp = Rpp()
+    my_rpp.load_from_npy(filename)
+    assert_raises(NotImplementedError, my_rpp.aerobic_meta_model, method='None')

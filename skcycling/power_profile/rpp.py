@@ -262,7 +262,7 @@ class Rpp(object):
         ----------
         X : array-like, shape (n_samples, )
 
-        _refit : bool
+        refit : bool
             If True, the RPP will be overidden.
 
         in_parallel : boolean
