@@ -526,5 +526,53 @@ class Rpp(object):
                                                           intercept))
         else:
             raise NotImplementedError
+        #call _find_Tmap_MAP
+        #call _find_AEI
 
         return slope, intercept, std_err, coeff_det
+
+    def _find_Tmap_MAP(slope, intercept, std_err, ts, rpp):
+        # test from 10 to end 
+
+        nb_pt = np.size(ts)
+        for i in range(nb_pt):
+            F_xi = slope * ts[i] + intercept
+            if(np.abs(F_xi-rpp[TS[i]]) < 2*std_err):
+                Tmap = ts[i]
+                MAP = rpp[ts[i]]
+            break
+
+        return Tmap, MAP
+
+
+    def _find_AEI(rpp, ts, normalized=False, method='lsq'):
+            # ts from pma to end
+            
+        if method == 'lsq':
+            # Perform the fitting using least-square
+            slope, intercept, _, _, _ = linregress(np.log(ts), rpp)
+
+            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+
+            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+        elif method == 'lm':
+            # Perform the fitting using non-linear least-square
+            # Levenberg-Marquardt
+            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
+
+            slope = popt[0]
+            intercept = popt[1]
+
+            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+
+            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+        return slope, coeff_det
+
