@@ -439,6 +439,37 @@ class Rpp(object):
 
         return 1. - (ss_res / ss_tot)
 
+    def _fiting_linear(rpp, ts, method='lsq'):
+
+        if method == 'lsq':
+            # Perform the fitting using least-square
+            slope, intercept, _, _, _ = linregress(np.log(ts), rpp)
+
+            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+
+            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+        elif method == 'lm':
+            # Perform the fitting using non-linear least-square
+            # Levenberg-Marquardt
+            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
+
+            slope = popt[0]
+            intercept = popt[1]
+
+            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+
+            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+
+        return slope, intercept, std_err, coeff_det
+    
     def aerobic_meta_model(self, ts=None, starting_time=4,
                            normalized=False, method='lsq'):
         """ Compute the aerobic metabolism model from the
