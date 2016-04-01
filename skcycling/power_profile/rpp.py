@@ -6,7 +6,6 @@ import numpy as np
 
 import os
 
-from scipy.interpolate import UnivariateSpline
 from scipy.stats import linregress
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit

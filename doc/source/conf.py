@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # scikit-cycling documentation build configuration file, created by
-# sphinx-quickstart on Thu Mar 31 20:31:22 2016.
+# sphinx-quickstart on Thu Mar 31 23:56:32 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -14,6 +14,7 @@
 
 import sys
 import os
+import sphinx_rtd_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -75,7 +76,7 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -117,7 +118,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
