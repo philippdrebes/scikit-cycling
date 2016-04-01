@@ -1,3 +1,7 @@
+"""
+The :mod:`skcycling.utils` module include utility functions.
+"""
+
 from .io_fit import load_power_from_fit
 
 from .checker import _check_X
