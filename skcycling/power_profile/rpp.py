@@ -490,13 +490,46 @@ class Rpp(object):
                              self.max_duration_rpp_,
                              (self.max_duration_rpp_ - starting_time) * 60)
 
-        # Compute the rpp
-        rpp = self.resampling_rpp(ts, normalized=normalized)
+            # Compute the rpp
+            rpp = self.resampling_rpp(ts, normalized=normalized)
 
-        # The zero values need to be avoided for the fitting
-        # Keep the signal which is not zero
-        ts = ts[np.nonzero(rpp)]
-        rpp = rpp[np.nonzero(rpp)]
+            # The zero values need to be avoided for the fitting
+            # Keep the signal which is not zero
+            ts = ts[np.nonzero(rpp)]
+            rpp = rpp[np.nonzero(rpp)]
+            slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method)
+ 
+        else:
+            # cropping ts in order compute fitting only for to 10min
+            ts = ts[13:]
+
+            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
+                                                          slope,
+                                                          intercept))
+            rpp = self.resampling_rpp(ts, normalized=normalized)
+            
+            ts = ts[np.nonzero(rpp)]
+            rpp = rpp[np.nonzero(rpp)]
+            slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method)
+            
+            Tmap, MAP = _find_Tmap_MAP(slope, intercept, std_err, ts, rpp)
+            AEI, intercept_AEI, std_err_AEI, coeff_det_AEI = _find_AEI(rpp, ts, method = 'lsq')
+
+        return Tmap, MAP, slope, intercept, std_err, coeff_det, AEI, intercept_AEI, std_err_AEI, coeff_det_AEI
+
+    def _find_Tmap_MAP(slope, intercept, std_err, ts, rpp):
+
+        nb_pt = np.size(ts)
+        for i in range(nb_pt):
+            F_xi = slope * ts[i] + intercept
+            if(np.abs(F_xi-rpp[i]) < 2*std_err):
+                Tmap = ts[i]
+                MAP = rpp[i]
+            break
+
+        return Tmap, MAP
+
+    def _fiting_linear(rpp, ts, method='lsq'):
 
         if method == 'lsq':
             # Perform the fitting using least-square
@@ -526,55 +559,23 @@ class Rpp(object):
                                                           intercept))
         else:
             raise NotImplementedError
-        #call _find_Tmap_MAP
-        #call _find_AEI
-
-        #add return Tmap MAP AEI and R2_AEI
 
         return slope, intercept, std_err, coeff_det
 
-    def _find_Tmap_MAP(slope, intercept, std_err, ts, rpp):
-        # test from 10 to end 
-
-        nb_pt = np.size(ts)
-        for i in range(nb_pt):
-            F_xi = slope * ts[i] + intercept
-            if(np.abs(F_xi-rpp[TS[i]]) < 2*std_err):
-                Tmap = ts[i]
-                MAP = rpp[ts[i]]
-            break
-
-        return Tmap, MAP
-
-
-    def _find_AEI(rpp, ts, normalized=False, method='lsq'):
+    def _find_AEI(rpp, ts, Tmap, MAP, method='lsq'):
             # ts from pma to end
-            
-        if method == 'lsq':
-            # Perform the fitting using least-square
-            slope, intercept, _, _, _ = linregress(np.log(ts), rpp)
+        
+        rpp = rpp/MAP
+        t_ts = np.size(ts)
+        ind_Tmap = 0
+        for i in range(t_ts):
+            if ts[i] == Tmap:
+                ind_Tmap = i;
+                break
 
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
+        ts = ts[ind_Tmap:]
 
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-        elif method == 'lm':
-            # Perform the fitting using non-linear least-square
-            # Levenberg-Marquardt
-            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
-
-            slope = popt[0]
-            intercept = popt[1]
-
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-        return slope, coeff_det
+        slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method='lsq')
+        
+        return slope, intercept, std_err, coeff_det
 
