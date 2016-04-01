@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # scikit-cycling documentation build configuration file, created by
-# sphinx-quickstart on Thu Mar 31 23:56:32 2016.
+# sphinx-quickstart on Sat Apr  2 00:03:28 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -31,6 +31,9 @@ import sphinx_rtd_theme
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
+    'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
