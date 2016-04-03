@@ -357,14 +357,14 @@ def test_aerobic_meta_model():
     # Read the profile
     my_rpp = Rpp()
     my_rpp.load_from_npy(filename)
-    slope, intercept, std_err, coeff_det = my_rpp.aerobic_meta_model()
-    assert_almost_equal(slope, -45.438276960697969,
+    pma, t_pma, aei = my_rpp.aerobic_meta_model()
+
+    # Check the different value
+    assert_almost_equal(pma, 453.37229888268155,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(intercept, 479.71555333702042,
+    assert_almost_equal(t_pma, 3.,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(std_err, 9.5052160292987846,
-                        decimal=DECIMAL_PRECISION)
-    assert_almost_equal(coeff_det, 0.94452595349498414,
+    assert_almost_equal(aei, -11.487957337374663,
                         decimal=DECIMAL_PRECISION)
 
 
@@ -379,16 +379,15 @@ def test_aerobic_meta_model_ts():
     # Read the profile
     my_rpp = Rpp()
     my_rpp.load_from_npy(filename)
+    ts_reg = np.array([3., 4., 5., 6., 7., 10, 20, 30, 45, 60, 120, 180, 240])
+    pma, t_pma, aei = my_rpp.aerobic_meta_model(ts=ts_reg)
 
-    ts_reg = np.array([10, 20, 30, 45, 60, 120, 180, 240])
-    slope, intercept, std_err, coeff_det = my_rpp.aerobic_meta_model(ts=ts_reg)
-    assert_almost_equal(slope, -51.845106142316858,
+    # Check the different value
+    assert_almost_equal(pma, 453.37229888268155,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(intercept, 508.11145220421508,
+    assert_almost_equal(t_pma, 3.,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(std_err, 10.859924193992399,
-                        decimal=DECIMAL_PRECISION)
-    assert_almost_equal(coeff_det, 0.97005991919366041,
+    assert_almost_equal(aei, -11.497339815062894,
                         decimal=DECIMAL_PRECISION)
 
 
@@ -403,14 +402,14 @@ def test_aerobic_meta_model_weight():
     # Read the profile
     my_rpp = Rpp()
     my_rpp.load_from_npy(filename, cyclist_weight=60.)
-    slope, intercept, std_err, coeff_det = my_rpp.aerobic_meta_model(normalized=True)
-    assert_almost_equal(slope, -0.75730461601163268,
+    pma, t_pma, aei = my_rpp.aerobic_meta_model(normalized=True)
+
+    # Check the different value
+    assert_almost_equal(pma, 7.5562049813780261,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(intercept, 7.9952592222836731,
+    assert_almost_equal(t_pma, 3.,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(std_err, 0.15842026715497975,
-                        decimal=DECIMAL_PRECISION)
-    assert_almost_equal(coeff_det, 0.94452595349498414,
+    assert_almost_equal(aei, -11.487957337374663,
                         decimal=DECIMAL_PRECISION)
 
 
@@ -425,14 +424,14 @@ def test_aerobic_meta_model_lm():
     # Read the profile
     my_rpp = Rpp()
     my_rpp.load_from_npy(filename)
-    slope, intercept, std_err, coeff_det = my_rpp.aerobic_meta_model(method='lm')
-    assert_almost_equal(slope, -45.438276960697969,
+    pma, t_pma, aei = my_rpp.aerobic_meta_model(method='lm')
+
+    # Check the different value
+    assert_almost_equal(pma, 453.37229888268155,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(intercept, 479.71555333702042,
+    assert_almost_equal(t_pma, 3.,
                         decimal=DECIMAL_PRECISION)
-    assert_almost_equal(std_err, 9.5052160292987846,
-                        decimal=DECIMAL_PRECISION)
-    assert_almost_equal(coeff_det, 0.94452595349498414,
+    assert_almost_equal(aei, -11.487957337374663,
                         decimal=DECIMAL_PRECISION)
 
 
@@ -447,4 +446,5 @@ def test_aerobic_meta_model_unknown_method():
     # Read the profile
     my_rpp = Rpp()
     my_rpp.load_from_npy(filename)
-    assert_raises(NotImplementedError, my_rpp.aerobic_meta_model, method='None')
+    assert_raises(NotImplementedError, my_rpp.aerobic_meta_model,
+                  method='None')

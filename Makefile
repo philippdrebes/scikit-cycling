@@ -19,7 +19,7 @@ test:
 # 	$(PYTHON) -c "import skcycling, sys, io; sys.exit(skcycling.doctest_verbose())"
 
 coverage:
-	$(NOSETESTS) skcycling --with-coverage --cover-package=skcycling
+	$(NOSETESTS) skcycling -s -v --with-coverage --cover-package=skcycling
 
 html:
 	conda install -y sphinx sphinx_rtd_theme

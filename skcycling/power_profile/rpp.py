@@ -5,14 +5,19 @@ This module contains class and methods related to the record power-profile.
 import numpy as np
 
 import os
+import warnings
 
-from scipy.stats import linregress
 from scipy.interpolate import interp1d
-from scipy.optimize import curve_fit
 
 from joblib import Parallel, delayed
 
 from ..utils.checker import _check_X
+from ..utils.fit import log_linear_fitting
+from ..utils.fit import log_linear_model
+
+
+SAMPLING_WKO = np.array([0.016, 0.083, 0.5, 1, 3, 3.5, 4, 4.5, 5, 5.5,
+                         6, 6.5, 7, 10, 20, 30, 45, 60, 120, 180, 240])
 
 
 def _rpp_parallel(X, idx_t_rpp):
@@ -206,7 +211,7 @@ class Rpp(object):
         else:
             self.rpp_norm_ = None
 
-        return self#(max_duration_rpp)
+        return self
 
     def fit(self, X, in_parallel=True):
         """ Fit the data to the RPP
@@ -389,100 +394,16 @@ class Rpp(object):
 
         return f(ts)
 
-    @staticmethod
-    def _res_std_dev(model, estimate):
-        """ Private function to compute the residual standard deviation
-
-        Parameters
-        ----------
-        model : array-like, shape (n_sample, )
-             Value used to made the fitting.
-
-        estimate : array-like, shape (n_sample, )
-             Value obtained by fitting.
-
-        Return
-        ------
-        residual : float
-            Residual standard deviation.
-        """
-
-        return np.sqrt(np.sum((model - estimate) ** 2) /
-                       (float(model.size) - 2.))
-
-    @staticmethod
-    def _r_squared(model, estimate):
-        """ Private function to compute the coefficient of determination
-
-        Parameters
-        ----------
-        model : array-like, shape (n_sample, )
-             Value used to made the fitting.
-
-        estimate : array-like, shape (n_sample, )
-             Value obtained by fitting.
-
-        Return
-        ------
-        coeff_det : float
-            Coefficient of determination.
-        """
-
-        # Compute of the observed data
-        model_mean = np.mean(model)
-
-        # Compute the total sum of squares
-        ss_tot = np.sum((model - model_mean) ** 2)
-
-        # Compute the sum of squares residual
-        ss_res = np.sum((model - estimate) ** 2)
-
-        return 1. - (ss_res / ss_tot)
-
-    def _fiting_linear(rpp, ts, method='lsq'):
-
-        if method == 'lsq':
-            # Perform the fitting using least-square
-            slope, intercept, _, _, _ = linregress(np.log(ts), rpp)
-
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-        elif method == 'lm':
-            # Perform the fitting using non-linear least-square
-            # Levenberg-Marquardt
-            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
-
-            slope = popt[0]
-            intercept = popt[1]
-
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-        return slope, intercept, std_err, coeff_det
-    
-    def aerobic_meta_model(self, ts=None, starting_time=4,
-                           normalized=False, method='lsq'):
+    def aerobic_meta_model(self, ts=None, normalized=False, method='lsq'):
         """ Compute the aerobic metabolism model from the
             record power-profile
 
         Parameters
         ----------
-        ts : array-like, shape (n_samples, )
+        ts : ndarray, shape (n_samples, ) or None
             Array containing the sample to take into account.
-            None if we want to pick up all the data.
-
-        start_time : int, default 4
-            Starting time to consider when fitting the linear model.
+            If None, the sampling of the method of Pinot is applied, which is
+            equivalent to the sampling from WKO+
 
         normalized : bool, default False
             Return a weight-normalized rpp if True.
@@ -492,121 +413,90 @@ class Rpp(object):
 
         Return
         ------
-        slope : float
-            slope of the regression line.
+        pma : float
+            Maximum Aerobic Power.
 
-        intercept : float
-            intercept of the regression line.
+        t_pma : int
+            Time of the Maximum Aerobic Power in seconds.
 
-        stderr : float
-            Standard error of the estimate.
-
-        coeff_det : float
-            Coefficient of determination.
+        aei : float
+            Aerobic Endurance Index.
 
         Notes
         -----
         [1] Pinot et al., "Determination of Maximal Aerobic Power
-        on the Field in Cylcing" (2014)
+        on the Field in Cycling" (2014)
 
         """
 
-        # Define the function to fit
-        def linear_model(x, a, b):
-            return a * x + b
-
         # If ts is not provided we have to create a timeline
         if ts is None:
-            ts = np.linspace(starting_time,
-                             self.max_duration_rpp_,
-                             (self.max_duration_rpp_ - starting_time) * 60)
+            # By default ts will be taken as in WKO+
+            ts = SAMPLING_WKO.copy()
 
-            # Compute the rpp
-            rpp = self.resampling_rpp(ts, normalized=normalized)
+        if np.count_nonzero(ts > self.max_duration_rpp_) > 0:
+            # The values which are outside of the maximum duration need to
+            # be removed
+            ts = ts[np.nonzero(ts <= self.max_duration_rpp_)]
+            warnings.warn('Samples in `ts` have been removed since that they'
+                          ' are not information inside the rpp.')
 
-            # The zero values need to be avoided for the fitting
-            # Keep the signal which is not zero
-            ts = ts[np.nonzero(rpp)]
-            rpp = rpp[np.nonzero(rpp)]
-            slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method)
- 
+        # Compute the rpp
+        rpp = self.resampling_rpp(ts, normalized=normalized)
+
+        # The zero values need to be avoided for the fitting
+        # Keep the signal which is not zero
+        ts = ts[np.nonzero(rpp)]
+        rpp = rpp[np.nonzero(rpp)]
+
+        # Find the MAP and the corresponding time
+        # Only the time between 10 and 240 minutes is used for the regression
+        ts_pma_reg = ts[np.nonzero(np.bitwise_and(ts >= 10., ts <= 240.))]
+        rpp_pma_reg = rpp[np.nonzero(np.bitwise_and(ts >= 10., ts <= 240.))]
+
+        # Apply the first log-linear fitting
+        slope, intercept, std_err, _ = log_linear_fitting(ts_pma_reg,
+                                                          rpp_pma_reg,
+                                                          method)
+
+        # Find t_pma and pma
+        # First record between 3 and 7 min in the confidence area
+        ts_pma = ts[np.nonzero(np.bitwise_and(ts >= 3.,
+                                              ts <= 7.))]
+        rpp_pma = rpp[np.nonzero(np.bitwise_and(ts >= 3.,
+                                                ts <= 7.))]
+
+        # Compute the aerobic model found from the regression for
+        # the range of interest
+        aerobic_model = log_linear_model(ts_pma, slope, intercept)
+
+        # Check the first value which entered in the confidence of 2 std
+        if np.count_nonzero(np.abs(rpp_pma -
+                                   aerobic_model) < 2. * std_err) > 0:
+            # Get the first value
+            t_pma = ts_pma[np.flatnonzero(np.abs(rpp_pma -
+                                                 aerobic_model) < 2. *
+                                          std_err)[0]]
+            # Obtain the corresponding mpa
+            pma = rpp_pma[np.flatnonzero(np.abs(rpp_pma -
+                                                aerobic_model) < 2. *
+                                         std_err)[0]]
         else:
-            # cropping ts in order compute fitting only for to 10min
-            ts = ts[13:]
+            raise ValueError('There is no value entering in the confidence'
+                             ' level between 3 and 7 minutes.')
 
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-            rpp = self.resampling_rpp(ts, normalized=normalized)
-            
-            ts = ts[np.nonzero(rpp)]
-            rpp = rpp[np.nonzero(rpp)]
-            slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method)
-            
-            Tmap, MAP = _find_Tmap_MAP(slope, intercept, std_err, ts, rpp)
-            AEI, intercept_AEI, std_err_AEI, coeff_det_AEI = _find_AEI(rpp, ts, method = 'lsq')
+        # Find aei
+        # Get the rpp and ts between t_pma and 240 minutes
+        ts_aei_reg = ts[np.nonzero(np.bitwise_and(ts >= float(t_pma),
+                                                  ts <= 240.))]
+        rpp_aei_reg = rpp[np.nonzero(np.bitwise_and(ts >= float(t_pma),
+                                                    ts <= 240.))]
+        # Express the rpp in term of percentage of PMA
+        rpp_aei_reg = rpp_aei_reg / float(pma) * 100.
 
-        return Tmap, MAP, slope, intercept, std_err, coeff_det, AEI, intercept_AEI, std_err_AEI, coeff_det_AEI
+        # Apply a new regression with the aei value
+        aei, _, _, _ = log_linear_fitting(ts_aei_reg,
+                                          rpp_aei_reg,
+                                          method)
 
-    def _find_Tmap_MAP(slope, intercept, std_err, ts, rpp):
-
-        nb_pt = np.size(ts)
-        for i in range(nb_pt):
-            F_xi = slope * ts[i] + intercept
-            if(np.abs(F_xi-rpp[i]) < 2*std_err):
-                Tmap = ts[i]
-                MAP = rpp[i]
-            break
-
-        return Tmap, MAP
-
-    def _fiting_linear(rpp, ts, method='lsq'):
-
-        if method == 'lsq':
-            # Perform the fitting using least-square
-            slope, intercept, _, _, _ = linregress(np.log(ts), rpp)
-
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-        elif method == 'lm':
-            # Perform the fitting using non-linear least-square
-            # Levenberg-Marquardt
-            popt, _ = curve_fit(linear_model, np.log(ts), rpp)
-
-            slope = popt[0]
-            intercept = popt[1]
-
-            std_err = self._res_std_dev(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-
-            coeff_det = self._r_squared(rpp, linear_model(np.log(ts),
-                                                          slope,
-                                                          intercept))
-        else:
-            raise NotImplementedError
-
-        return slope, intercept, std_err, coeff_det
-
-    def _find_AEI(rpp, ts, Tmap, MAP, method='lsq'):
-            # ts from pma to end
-        
-        rpp = rpp/MAP
-        t_ts = np.size(ts)
-        ind_Tmap = 0
-        for i in range(t_ts):
-            if ts[i] == Tmap:
-                ind_Tmap = i;
-                break
-
-        ts = ts[ind_Tmap:]
-
-        slope, intercept, std_err, coeff_det = _fiting_linear(rpp, ts, method='lsq')
-        
-        return slope, intercept, std_err, coeff_det
-
+        return pma, t_pma, aei
