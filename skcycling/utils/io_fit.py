@@ -2,11 +2,13 @@
 Methods to handle input/output files.
 """
 
-import numpy as np
-from os.path import isfile
 import warnings
+import numpy as np
 
+from os.path import isfile
 from fitparse import FitFile
+
+from .checker import check_filename_fit
 
 
 def load_power_from_fit(filename):
@@ -21,16 +23,12 @@ def load_power_from_fit(filename):
     ------
     power_rec : ndarray, shape (n_samples)
         Power records of the ride.
+
+    date_rec : date
+        Date associated with the ride
     """
-
-    # Check that the filename has the good extension
-    if filename.endswith('.fit') is not True:
-        raise ValueError('The file does not have the right extension.'
-                         ' Expected *.fit.')
-
-    # Check if the file exists
-    if isfile(filename) is not True:
-        raise ValueError('The file does not exist. Please check the path.')
+    # Check that the filename is existing
+    filename = check_filename_fit(filename)
 
     # Create an object to open the activity
     activity = FitFile(filename)
@@ -38,6 +36,10 @@ def load_power_from_fit(filename):
 
     # Get only the power records
     records = list(activity.get_messages(name='record'))
+
+    # Extract the date from the first record
+    # It should be more reliable than the device information
+    date_rec = records[0].get_value('timestamp').date()
 
     # Append the different values inside a list which will be later
     # converted to numpy array
@@ -63,4 +65,4 @@ def load_power_from_fit(filename):
         warnings.warn('This file does not contain any power data.'
                       ' Be aware.')
 
-    return power_rec
+    return power_rec, date_rec

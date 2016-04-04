@@ -2,9 +2,9 @@
 """
 
 import numpy as np
+import os
 
-
-def _check_X(X):
+def check_X(X):
     """ Private function helper to check if X is of proper size
 
     Parameters
@@ -24,7 +24,7 @@ def _check_X(X):
     return X
 
 
-def _check_float(X):
+def check_float(X):
     """ Private function helper to check if the value is a float
 
     Parameters
@@ -38,3 +38,32 @@ def _check_float(X):
         return np.float(X)
     else:
         return X
+
+
+def check_filename_fit(filename):
+    """ Method to check if the filename corresponds to a fit file.
+
+    Parameters
+    ----------
+    filename : str
+        The fit file to check.
+
+    Return
+    ------
+    filename : str
+        The checked filename.
+    """
+
+    # Check that filename is of string type
+    if isinstance(filename, basestring):
+        # Check that this is a fit file
+        if filename.endswith('.npy'):
+            # Check that the file is existing
+            if os.path.isfile(filename):
+                return filename
+            else:
+                raise ValueError('The file does not exist.')
+        else:
+            raise ValueError('The file is not an npy file.')
+    else:
+        raise ValueError('The filename needs to be a string.')

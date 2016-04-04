@@ -10,8 +10,9 @@ from .fit import log_linear_fitting
 from .fit import linear_model
 from .fit import log_linear_model
 
-from .checker import _check_X
-from .checker import _check_float
+from .checker import check_X
+from .checker import check_float
+from .checker import check_filename_fit
 
 __all__ = ['load_power_from_fit',
            'res_std_dev',
@@ -19,5 +20,6 @@ __all__ = ['load_power_from_fit',
            'log_linear_fitting',
            'linear_model',
            'log_linear_model',
-           '_check_X',
-           '_check_float']
+           'check_X',
+           'check_float',
+           'check_filename_fit']
