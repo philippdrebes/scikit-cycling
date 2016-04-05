@@ -1,10 +1,7 @@
 """ Ride Power-Profile class.
 """
 
-import warnings
 import numpy as np
-import copy_reg
-import types
 
 from joblib import Parallel, delayed
 

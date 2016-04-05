@@ -5,7 +5,6 @@ Methods to handle input/output files.
 import warnings
 import numpy as np
 
-from os.path import isfile
 from fitparse import FitFile
 
 from .checker import check_filename_fit
