@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from ..utils.checker import _check_X
+from ..utils.checker import check_X
 
 
 def outliers_rejection(X, method='threshold', thres=2500.):
@@ -28,7 +28,7 @@ def outliers_rejection(X, method='threshold', thres=2500.):
     """
 
     # Check if the variable X is valid
-    X = _check_X(X)
+    X = check_X(X)
 
     # Detect the outliers
     if method == 'threshold':

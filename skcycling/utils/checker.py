@@ -4,6 +4,7 @@
 import numpy as np
 import os
 
+
 def check_X(X):
     """ Private function helper to check if X is of proper size
 
@@ -57,13 +58,13 @@ def check_filename_fit(filename):
     # Check that filename is of string type
     if isinstance(filename, basestring):
         # Check that this is a fit file
-        if filename.endswith('.npy'):
+        if filename.endswith('.fit'):
             # Check that the file is existing
             if os.path.isfile(filename):
                 return filename
             else:
                 raise ValueError('The file does not exist.')
         else:
-            raise ValueError('The file is not an npy file.')
+            raise ValueError('The file is not an fit file.')
     else:
         raise ValueError('The filename needs to be a string.')

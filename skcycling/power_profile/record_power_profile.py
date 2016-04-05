@@ -3,6 +3,8 @@
 
 import numpy as np
 
+from datetime import date
+
 from .base_power_profile import BasePowerProfile
 from .ride_power_profile import RidePowerProfile
 
@@ -24,7 +26,7 @@ class RecordPowerProfile(BasePowerProfile):
 
     Attributes
     ----------
-    data_ : array-like, shape (60 * max_duration_rpp, )
+    data_ : array-like, shape (60 * max_duration_profile_, )
         Array in which the record power-profile is stored.
         The units used is the second.
 
@@ -46,7 +48,7 @@ class RecordPowerProfile(BasePowerProfile):
                  cyclist_weight=None):
         # Call the constructor of the parent class
         super(RecordPowerProfile, self).__init__(max_duration_profile,
-                                               cyclist_weight)
+                                                 cyclist_weight)
 
     def _validate_ride_pp(self, ride_pp):
         """ Method to check the consistency of the ride power-profile list.
@@ -109,6 +111,12 @@ class RecordPowerProfile(BasePowerProfile):
         ------
         self : object
             Returns self.
+
+        Notes
+        -----
+        Check that the different rpp have the same size max_duration_rpp_
+        Check also that the ride has the attribute data_ to be sure that
+        it was fitted before.
         """
         # Check that the ride power-profile list is ok
         ride_pp = self._validate_ride_pp(ride_pp)
@@ -116,12 +124,18 @@ class RecordPowerProfile(BasePowerProfile):
         # Check that the date provided are correct
         if date_profile is not None:
             if isinstance(date_profile, tuple) and len(date_profile) == 2:
-                # Check that the first date is earlier than the second date
-                if date_profile[0] < date_profile[1]:
-                    date_profile = date_profile
+                # Check that the tuple is of write type
+                if isinstance(date_profile[0],
+                              date) and isinstance(date_profile[1],
+                                                   date):
+                    # Check that the first date is earlier than the second date
+                    if date_profile[0] < date_profile[1]:
+                        date_profile = date_profile
+                    else:
+                        raise ValueError('The tuple need to be ordered'
+                                         ' as (start, finish).')
                 else:
-                    raise ValueError('The tuple need to be ordered'
-                                     ' as (start, finish).')
+                    raise ValueError('Use the class `date` inside the tuple.')
             else:
                 raise ValueError('The date are ordered a tuple of'
                                  ' date (start, finsih).')
@@ -133,17 +147,19 @@ class RecordPowerProfile(BasePowerProfile):
             date_list = np.array([rpp.date_profile_ for rpp in ride_pp])
 
             # Find the index which are inside the range of date
-            idx_ride = np.nonzero(np.bitwise_and(date_list >= date_profile[0],
-                                                 date_list <= date_profile[1]))
+            idx_ride = np.flatnonzero(np.bitwise_and(
+                date_list >= date_profile[0],
+                date_list <= date_profile[1]))
 
             # Compute the record for these files only
-            self.data_ = self._maximal_mean_power(ride_pp[idx_ride])
+            self.data_ = self._maximal_mean_power([ride_pp[i]
+                                                   for i in idx_ride])
 
             # Store the date range
             self.date_profile_ = date_profile
         else:
             # Compute the record for all the files
-            self.data_ = self._maximal_mean_power(ride_pp[idx_ride])
+            self.data_ = self._maximal_mean_power(ride_pp)
 
             # Store the date range
             date_list = np.array([rpp.date_profile_ for rpp in ride_pp])
@@ -153,5 +169,7 @@ class RecordPowerProfile(BasePowerProfile):
         # Compute the normalized rpp if we should
         if self.cyclist_weight_ is not None:
             self.data_norm_ = self.data_ / self.cyclist_weight_
+        else:
+            self.data_norm_ = None
 
         return self

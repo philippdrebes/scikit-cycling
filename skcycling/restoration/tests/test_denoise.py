@@ -21,6 +21,7 @@ X_COMP = np.array([1495., 148.42105263, 306.84210526, 465.26315789,
 
 X_GT = np.array([200., 200., 233.333333, 266.666667, 300., 300.])
 
+
 def test_outliers_thres_rejection():
     """ Test the outlier rejection method based on thresholding """
 

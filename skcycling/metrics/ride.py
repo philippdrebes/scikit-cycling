@@ -7,8 +7,8 @@ Function named as ``*_error`` or ``*_loss`` return a scalar value to minimize:
 the lower the better
 """
 
-from ..utils.checker import _check_X
-from ..utils.checker import _check_float
+from ..utils.checker import check_X
+from ..utils.checker import check_float
 
 from ..restoration.denoise import moving_average
 
@@ -42,8 +42,8 @@ def normalized_power_score(X, pma):
     """
 
     # Check the conformity of X and pma
-    X = _check_X(X)
-    pma = _check_float(pma)
+    X = check_X(X)
+    pma = check_float(pma)
 
     # Denoise the rpp through moving average using 30 sec filter
     x_avg = moving_average(X, win=30)
@@ -75,8 +75,8 @@ def intensity_factor_ftp_score(X, ftp):
     """
 
     # Check the conformity of X and ftp
-    X = _check_X(X)
-    ftp = _check_float(ftp)
+    X = check_X(X)
+    ftp = check_float(ftp)
 
     # Compute the normalized power
     np_score = normalized_power_score(X, ftp2pma(ftp))
@@ -102,8 +102,8 @@ def intensity_factor_pma_score(X, pma):
     """
 
     # Check the conformity of X and pma
-    X = _check_X(X)
-    pma = _check_float(pma)
+    X = check_X(X)
+    pma = check_float(pma)
 
     # Compute the resulting IF
     return intensity_factor_ftp_score(X, pma2ftp(pma))
@@ -128,8 +128,8 @@ def training_stress_ftp_score(X, ftp):
     """
 
     # Check the conformity of X and ftp
-    X = _check_X(X)
-    ftp = _check_float(ftp)
+    X = check_X(X)
+    ftp = check_float(ftp)
 
     # Compute the intensity factor score
     if_score = intensity_factor_ftp_score(X, ftp)
@@ -156,8 +156,8 @@ def training_stress_pma_score(X, pma):
     """
 
     # Check the conformity of X and pma
-    X = _check_X(X)
-    pma = _check_float(pma)
+    X = check_X(X)
+    pma = check_float(pma)
 
     # Compute the training stress score
     return training_stress_ftp_score(X, pma2ftp(pma))
@@ -216,8 +216,8 @@ def training_stress_pma_grappe_score(X, pma):
     """
 
     # Check the consistency of X and pma
-    X = _check_X(X)
-    pma = _check_float(pma)
+    X = check_X(X)
+    pma = check_float(pma)
 
     # Compute the stress for each item of the ESIE
     tss_grappe = 0.

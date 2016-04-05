@@ -1,6 +1,9 @@
 """ Testing the input/output methods for FIT files """
 
+import os
 import numpy as np
+
+from datetime import date
 
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_equal
@@ -8,9 +11,6 @@ from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
-
-import warnings
-import os
 
 from skcycling.utils import load_power_from_fit
 
@@ -70,5 +70,6 @@ def test_load_power_normal_file():
     currdir = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(currdir, 'data', '2013-04-24-22-22-25.fit')
 
-    x_loaded = load_power_from_fit(filename)
-    assert_array_equal(x_loaded, ride)
+    power, date_loaded = load_power_from_fit(filename)
+    assert_array_equal(power, ride)
+    assert_equal(date_loaded, date(2013, 4, 24))
