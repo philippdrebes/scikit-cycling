@@ -3,8 +3,6 @@
 
 import numpy as np
 
-from datetime import date
-
 from .base_power_profile import BasePowerProfile
 from .ride_power_profile import RidePowerProfile
 
