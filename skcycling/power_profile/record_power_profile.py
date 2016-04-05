@@ -70,6 +70,21 @@ class RecordPowerProfile(BasePowerProfile):
                 if not isinstance(rpp, RidePowerProfile):
                     raise ValueError('The object in the list need to be from'
                                      ' the type RidePowerProfile')
+                # We need to check that each ride has been fitted
+                if getattr(rpp, 'data_', None) is None or rpp.max_duration_profile_ is None:
+                    raise ValueError('One of the ride never has been fitted.'
+                                     ' Fit before to compute the record rpp.')
+            # Create a list of all the max duration to check that they are
+            # all equal
+            max_duration = np.array([rpp.max_duration_profile_
+                                     for rpp in ride_pp])
+            if self.max_duration_profile_ is None:
+                raise ValueError('You need to specify the maximum duration for'
+                                 ' the profile equal to the maximum duration'
+                                 ' of each ride.')
+            if not np.all(max_duration == self.max_duration_profile_):
+                raise ValueError('The maximum duration of the profile should'
+                                 ' be the same for all the data.')
             return ride_pp
         else:
             raise ValueError('The ride power-profile should be given as'
@@ -111,12 +126,6 @@ class RecordPowerProfile(BasePowerProfile):
         ------
         self : object
             Returns self.
-
-        Notes
-        -----
-        Check that the different rpp have the same size max_duration_rpp_
-        Check also that the ride has the attribute data_ to be sure that
-        it was fitted before.
         """
         # Check that the ride power-profile list is ok
         ride_pp = self._validate_ride_pp(ride_pp)

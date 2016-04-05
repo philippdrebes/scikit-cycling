@@ -193,3 +193,77 @@ def test_record_pp_fit_date_wrong_tuple():
     # Raise an error when the ordered of the date is not correct
     assert_raises(ValueError, record_pp.fit, ride_pp_list,
                   date_profile=(date(2014, 1, 2), date(2014, 1, 1)))
+
+
+def test_record_pp_fit_forget_fitting():
+    """ Test either if an error is raised when the ride power-profile were
+    not fitted. """
+    # Create the path to read the npy file
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    # Create a list of file that we will read
+    filename_list = [os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-07-14-26-22.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-11-11-39-38.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-07-26-18-50-56.fit')]
+
+    # Create a list of ride power-profile
+    ride_pp_list = [RidePowerProfile(max_duration_profile=1)
+                    for i in range(len(filename_list))]
+
+    # Create an object to handle the record power-profile
+    record_pp = RecordPowerProfile(max_duration_profile=1)
+    # Find the record_rpp by fitting the list of ride power-profile
+    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+
+
+def test_record_pp_fit_forget_fitting():
+    """ Test either if an error is raised when we did not give any duration. """
+    # Create the path to read the npy file
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    # Create a list of file that we will read
+    filename_list = [os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-07-14-26-22.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-11-11-39-38.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-07-26-18-50-56.fit')]
+
+    # Create a list of ride power-profile
+    ride_pp_list = [RidePowerProfile(max_duration_profile=1)
+                    for i in range(len(filename_list))]
+
+    # Fit each file of the list
+    for ride, filename in zip(ride_pp_list, filename_list):
+        ride.fit(filename)
+
+    # Create an object to handle the record power-profile
+    record_pp = RecordPowerProfile(max_duration_profile=None)
+    # Find the record_rpp by fitting the list of ride power-profile
+    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+
+
+def test_record_pp_fit_different_max_duration():
+    """ Test either if an error is raised when the max duration is different
+    from on fit to another one. """
+    # Create the path to read the npy file
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    # Create a list of file that we will read
+    filename_list = [os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-07-14-26-22.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-11-11-39-38.fit')]
+
+    # Create a list of ride power-profile
+    ride_pp_list = [RidePowerProfile(max_duration_profile=i+1)
+                    for i in range(len(filename_list))]
+
+    # Fit each file of the list
+    for ride, filename in zip(ride_pp_list, filename_list):
+        ride.fit(filename)
+
+    # Create an object to handle the record power-profile
+    record_pp = RecordPowerProfile(max_duration_profile=1)
+    # Find the record_rpp by fitting the list of ride power-profile
+    assert_raises(ValueError, record_pp.fit, ride_pp_list)
