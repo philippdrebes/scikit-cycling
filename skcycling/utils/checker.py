@@ -1,8 +1,10 @@
 """ Helper function to check data conformity
 """
 
-import numpy as np
 import os
+import numpy as np
+
+from datetime import date
 
 
 def check_X(X):
@@ -121,3 +123,34 @@ def check_filename_pickle_save(filename):
             raise ValueError('The filename should have a `.p` extension.')
     else:
         raise ValueError('The filename needs to be of type string.')
+
+
+def check_tuple_date(date_tuple):
+    """ Function to check if the date tuple is consistent.
+
+    Parameters
+    ----------
+    date_tuple : tuple of date, shape (start, finish)
+        The tuple to check.
+
+    Return
+    ------
+    date_tuple : tuple of date, shape (start, finish)
+        The validated tuple.
+    """
+    if isinstance(date_tuple, tuple) and len(date_tuple) == 2:
+        # Check that the tuple is of write type
+        if isinstance(date_tuple[0],
+                      date) and isinstance(date_tuple[1],
+                                               date):
+            # Check that the first date is earlier than the second date
+            if date_tuple[0] < date_tuple[1]:
+                return date_tuple
+            else:
+                raise ValueError('The tuple need to be ordered'
+                                 ' as (start, finish).')
+        else:
+            raise ValueError('Use the class `date` inside the tuple.')
+    else:
+        raise ValueError('The date are ordered a tuple of'
+                         ' date (start, finsih).')

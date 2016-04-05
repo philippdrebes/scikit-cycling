@@ -8,6 +8,7 @@ from datetime import date
 from .base_power_profile import BasePowerProfile
 from .ride_power_profile import RidePowerProfile
 
+from ..utils.checker import check_tuple_date
 
 class RecordPowerProfile(BasePowerProfile):
     """ Record power-profile
@@ -132,22 +133,7 @@ class RecordPowerProfile(BasePowerProfile):
 
         # Check that the date provided are correct
         if date_profile is not None:
-            if isinstance(date_profile, tuple) and len(date_profile) == 2:
-                # Check that the tuple is of write type
-                if isinstance(date_profile[0],
-                              date) and isinstance(date_profile[1],
-                                                   date):
-                    # Check that the first date is earlier than the second date
-                    if date_profile[0] < date_profile[1]:
-                        date_profile = date_profile
-                    else:
-                        raise ValueError('The tuple need to be ordered'
-                                         ' as (start, finish).')
-                else:
-                    raise ValueError('Use the class `date` inside the tuple.')
-            else:
-                raise ValueError('The date are ordered a tuple of'
-                                 ' date (start, finsih).')
+            date_profile = check_tuple_date(date_profile)
 
         # In the case that we want to compute the record power-profile from a
         # subset using the date, we need find the ride which are interesting

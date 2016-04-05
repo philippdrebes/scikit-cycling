@@ -3,6 +3,8 @@ def configuration(parent_package='', top_path=None):
 
     config = Configuration('skcycling', parent_package, top_path)
 
+    config.add_subpackage('data_management')
+    config.add_subpackage('data_management/tests')
     config.add_subpackage('metrics')
     config.add_subpackage('metrics/tests')
     config.add_subpackage('power_profile')

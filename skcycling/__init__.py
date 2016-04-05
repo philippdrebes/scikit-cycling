@@ -5,6 +5,8 @@ analyse file extracted from powermeters.
 
 Subpackages
 -----------
+data_management
+    Class to manage the data for a rider.
 metrics
     Metrics to quantify cyclist ride.
 power_profile
@@ -63,7 +65,8 @@ if __SKCYCLING_SETUP__:
     # We are not importing the rest of the scikit during the build
     # process, as it may not be compiled yet
 else:
-    __all__ = ['metrics',
+    __all__ = ['data_management',
+               'metrics',
                'power_profile',
                'restoration',
                'utils']

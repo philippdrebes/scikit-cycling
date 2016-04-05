@@ -29,7 +29,7 @@ class BasePowerProfile(object):
 
     @staticmethod
     def load_from_pickles(filename):
-        """ Function to load an object RecordPowerProfile through pickles.
+        """ Function to load an object through pickles.
 
         Parameters
         ----------
@@ -49,7 +49,7 @@ class BasePowerProfile(object):
         return bpp
 
     def save_to_pickles(self, filename):
-        """ Function to save an object RecordPowerProfile through pickles.
+        """ Function to save an object through pickles.
 
         Parameters
         ----------

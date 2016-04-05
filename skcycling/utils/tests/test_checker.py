@@ -3,6 +3,8 @@
 import os
 import numpy as np
 
+from datetime import date
+
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_array_almost_equal
@@ -11,6 +13,7 @@ from numpy.testing import assert_raises
 
 from skcycling.utils import check_X
 from skcycling.utils import check_float
+from skcycling.utils import check_tuple_date
 from skcycling.utils import check_filename_fit
 from skcycling.utils import check_filename_pickle_load
 from skcycling.utils import check_filename_pickle_save
@@ -111,3 +114,31 @@ def test_check_filename_pickle_load():
     my_filename = check_filename_pickle_load(filename)
 
     assert_equal(my_filename, filename)
+
+
+def test_tuple_date_wrong_type_dim():
+    """ Test either if an error is raised when the object is not tuple or the
+    right size. """
+    assert_raises(ValueError, check_tuple_date, 1)
+    assert_raises(ValueError, check_tuple_date, (1, 1, 1))
+
+
+def test_tuple_date_wrong_type_tuple():
+    """ Test either if an error is raised if the type inside the tuple are
+    not date. """
+    assert_raises(ValueError, check_tuple_date, (1, 1))
+
+
+def test_tuple_date_wrong_order():
+    """ Test either if an error is raised when the date are not order in the
+    right way. """
+    assert_raises(ValueError, check_tuple_date, (date(2014, 1, 1),
+                                                 date(2013, 1, 1)))
+
+
+def test_tuple_date():
+    """ Test the routine to check the date tuple consistency. """
+    dt = (date(2014, 1, 1), date(2015, 1, 1))
+    dt_out = check_tuple_date(dt)
+
+    assert_equal(dt_out, dt)
