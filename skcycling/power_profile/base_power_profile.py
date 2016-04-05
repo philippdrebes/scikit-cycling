@@ -27,8 +27,8 @@ class BasePowerProfile(object):
         self.max_duration_profile_ = max_duration_profile
         self.cyclist_weight_ = cyclist_weight
 
-    @classmethod
-    def load_from_pickles(clf, filename):
+    @staticmethod
+    def load_from_pickles(filename):
         """ Function to load an object RecordPowerProfile through pickles.
 
         Parameters

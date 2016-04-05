@@ -11,7 +11,8 @@ from .ride import pma2ftp
 from .ride import ftp2pma
 from .ride import training_stress_pma_grappe_score
 from .ride import training_stress_ftp_grappe_score
-from .ride import aerobic_meta_model
+
+from .power_profile import aerobic_meta_model
 
 __all__ = [
     'normalized_power_score',
