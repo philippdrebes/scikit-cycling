@@ -288,7 +288,6 @@ def test_compute_record_pp():
 
     rider.add_rides_from_path(path_fit)
     rider.compute_record_pp()
-    np.save(os.path.join(currdir, 'data', 'record_pp.npy'), rider.record_pp_.data_)
     data = np.load(os.path.join(currdir, 'data', 'record_pp.npy'))
     # Check that the record is the same that the one previously saved
     assert_array_equal(rider.record_pp_.data_, data)
@@ -305,7 +304,6 @@ def test_compute_record_pp_date():
     rider.add_rides_from_path(path_fit)
     rider.compute_record_pp(date_start_finish=(date(2014, 5, 7),
                                                date(2014, 5, 11)))
-    np.save(os.path.join(currdir, 'data', 'record_pp_date.npy'), rider.record_pp_.data_)
     data = np.load(os.path.join(currdir, 'data', 'record_pp_date.npy'))
     # Check that the record is the same that the one previously saved
     assert_array_equal(rider.record_pp_.data_, data)
