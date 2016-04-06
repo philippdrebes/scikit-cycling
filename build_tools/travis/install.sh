@@ -47,7 +47,6 @@ python -c "import scipy; print('scipy %s' % scipy.__version__)"
 python setup.py develop
 
 # Install python-fitparse
-cd
-ls -l
+cd $TRAVIS_BUILD_DIR
 cd scikit-cycling/third-party/python-fitparse
 python setup.py install
