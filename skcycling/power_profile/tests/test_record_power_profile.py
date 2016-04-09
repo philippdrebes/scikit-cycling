@@ -11,7 +11,7 @@ from numpy.testing import assert_raises
 
 from skcycling.power_profile import RidePowerProfile
 from skcycling.power_profile import RecordPowerProfile
-
+from skcycling.power_profile.record_power_profile import maximal_mean_power
 
 def test_record_pp_fit():
     """ Test the fit routine to compute the record power-profile. """
@@ -267,3 +267,29 @@ def test_record_pp_fit_different_max_duration():
     record_pp = RecordPowerProfile(max_duration_profile=1)
     # Find the record_rpp by fitting the list of ride power-profile
     assert_raises(ValueError, record_pp.fit, ride_pp_list)
+
+
+def test_mmp_wrong_type():
+    """ Test either if an error is raised when the type passed to the max mean
+    power function is wrong. """
+    assert_raises(ValueError, maximal_mean_power, 1)
+
+    # Create the path to read the npy file
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    # Create a list of file that we will read
+    filename_list = [os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-07-14-26-22.fit'),
+                     os.path.join(currdir, 'data',
+                                  'fit_files', '2014-05-11-11-39-38.fit')]
+
+    # Create a list of ride power-profile
+    ride_pp_list = [RidePowerProfile(max_duration_profile=i+1)
+                    for i in range(len(filename_list))]
+
+    # Fit each file of the list
+    for ride, filename in zip(ride_pp_list, filename_list):
+        ride.fit(filename)
+
+    ride_pp_list.append(1)
+
+    assert_raises(ValueError, maximal_mean_power, ride_pp_list)

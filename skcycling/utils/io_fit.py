@@ -37,7 +37,7 @@ def load_power_from_fit(filename):
     records = list(activity.get_messages(name='record'))
 
     # Through an error if there is no data
-    if len(records) == 0:
+    if not records:
         raise ValueError('There is no data to treat in that file.')
 
     # Extract the date from the first record

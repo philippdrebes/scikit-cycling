@@ -8,6 +8,36 @@ from .ride_power_profile import RidePowerProfile
 
 from ..utils.checker import check_tuple_date
 
+def maximal_mean_power(ride_pp):
+    """ Function to compute the maximal mean power for different time.
+
+    Parameters
+    ----------
+    ride_pp : list of RidePowerProfile
+        The list from the power-profile to consider.
+
+    Return
+    ------
+    mmp : ndarray, shape (max_duration_profile_, )
+        The Maximal Mean Power for the different time
+    """
+    # Check that ride_pp is a list of RidePowerProfile
+    if isinstance(ride_pp, list):
+        # Check that each ride is the correct type
+        for pp in ride_pp:
+            if not isinstance(pp, RidePowerProfile):
+                raise ValueError('The objects in the list need to be of'
+                                 ' type RidePowerProfile.')
+    else:
+        raise ValueError('A list of RidePowerProfile needs to be passed'
+                         ' as argument.')
+
+    # From the list of RidePowerProfile, we need to extract the power
+    # information
+    profile = np.array([pp.data_ for pp in ride_pp])
+
+    return np.max(profile, axis=0)
+
 class RecordPowerProfile(BasePowerProfile):
     """ Record power-profile
 
@@ -89,25 +119,6 @@ class RecordPowerProfile(BasePowerProfile):
             raise ValueError('The ride power-profile should be given as'
                              ' a list.')
 
-    def _maximal_mean_power(self, ride_pp):
-        """ Function to compute the maximal mean power for different time.
-
-        Parameters
-        ----------
-        ride_pp : list of RidePowerProfile
-            The list from the power-profile to consider.
-
-        Return
-        ------
-        mmp : ndarray, shape (max_duration_profile_, )
-            The Maximal Mean Power for the different time
-        """
-        # From the list of RidePowerProfile, we need to extract the power
-        # information
-        profile = np.array([pp.data_ for pp in ride_pp])
-
-        return np.max(profile, axis=0)
-
     def fit(self, ride_pp, date_profile=None):
         """ Function to build the record power-profile from a list of ride
         power-profile.
@@ -145,14 +156,14 @@ class RecordPowerProfile(BasePowerProfile):
                 date_list <= date_profile[1]))
 
             # Compute the record for these files only
-            self.data_ = self._maximal_mean_power([ride_pp[i]
-                                                   for i in idx_ride])
+            self.data_ = maximal_mean_power([ride_pp[i]
+                                             for i in idx_ride])
 
             # Store the date range
             self.date_profile_ = date_profile
         else:
             # Compute the record for all the files
-            self.data_ = self._maximal_mean_power(ride_pp)
+            self.data_ = maximal_mean_power(ride_pp)
 
             # Store the date range
             date_list = np.array([rpp.date_profile_ for rpp in ride_pp])
