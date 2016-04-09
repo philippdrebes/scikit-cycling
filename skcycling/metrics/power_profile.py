@@ -44,6 +44,25 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
 
     aei : float
         Aerobic Endurance Index.
+
+    fit_info_pma_fitting : dict
+        This is a dictionary with the information collected about the fitting
+        related to the MAP. The attributes will be the following:
+
+        - `slope`: slope of the linear fitting,
+        - `intercept`: intercept of the linear fitting,
+        - `std_err`: standard error of the fitting,
+        - `coeff_det`: coefficient of determination.
+
+    fit_info_aei_fitting : dict
+        This is a dictionary with the information collected about the fitting
+        related to the AEI. The attributes will be the following:
+
+        - `slope`: slope of the linear fitting,
+        - `intercept`: intercept of the linear fitting,
+        - `std_err`: standard error of the fitting,
+        - `coeff_det`: coefficient of determination.
+
     Notes
     -----
     [1] Pinot et al., "Determination of Maximal Aerobic Power
@@ -80,9 +99,13 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
     rpp_pma_reg = rpp[np.nonzero(np.bitwise_and(ts >= 10., ts <= 240.))]
 
     # Apply the first log-linear fitting
-    slope, intercept, std_err, _ = log_linear_fitting(ts_pma_reg,
+    slope, intercept, std_err, coeff_det = log_linear_fitting(ts_pma_reg,
                                                       rpp_pma_reg,
                                                       method)
+
+    # Store the value inside a dictionary
+    fit_info_pma_fitting = {'slope' : slope, 'intercept' : intercept,
+                            'std_err': std_err, 'coeff_det' : coeff_det}
 
     # Find t_pma and pma
     # First record between 3 and 7 min in the confidence area
@@ -120,9 +143,13 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
     rpp_aei_reg = rpp_aei_reg / float(pma) * 100.
 
     # Apply a new regression with the aei value
-    aei, _, _, _ = log_linear_fitting(ts_aei_reg,
+    aei, intercept, std_err, coeff_det = log_linear_fitting(ts_aei_reg,
                                       rpp_aei_reg,
                                       method)
 
-    return pma, t_pma, aei
+    # Store the value inside a dictionary
+    fit_info_aei_fitting = {'slope' : aei, 'intercept' : intercept,
+                            'std_err': std_err, 'coeff_det' : coeff_det}
+
+    return pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting
 

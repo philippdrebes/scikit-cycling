@@ -91,7 +91,7 @@ def log_linear_fitting(x, y, method='lsq'):
     intercept : float
         intercept of the regression line.
 
-    stderr : float
+    std_err : float
         Standard error of the estimate.
 
     coeff_det : float
