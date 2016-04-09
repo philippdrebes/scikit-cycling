@@ -149,7 +149,7 @@ class Rider(object):
 
         return None
 
-    def add_rides_from_path(self, path, overwrite=False):
+    def add_rides_from_path(self, path, overwrite=False, verbose=True):
         """ Function which allows to read and fit some ride and add them to
         the current list of ride.
 
@@ -160,6 +160,9 @@ class Rider(object):
 
         overwrite : bool
             Overwrite the current ride power-profile list.
+
+        verbose : bool
+            Show information of the process.
 
         Return:
         self : object
@@ -174,6 +177,8 @@ class Rider(object):
         for filename in os.listdir(path):
             # Take only the fit file
             if filename.endswith('.fit'):
+                if verbose:
+                    print 'Process the file: {}'.format(filename)
                 rpp = RidePowerProfile(max_duration_profile=self.max_duration_profile_,
                                        cyclist_weight=self.cyclist_weight_)
                 rpp.fit(os.path.join(path, filename))
