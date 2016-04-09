@@ -36,6 +36,10 @@ def load_power_from_fit(filename):
     # Get only the power records
     records = list(activity.get_messages(name='record'))
 
+    # Through an error if there is no data
+    if len(records) == 0:
+        raise ValueError('There is no data to treat in that file.')
+
     # Extract the date from the first record
     # It should be more reliable than the device information
     date_rec = records[0].get_value('timestamp').date()
