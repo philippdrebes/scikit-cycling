@@ -22,5 +22,5 @@ coverage:
 	$(NOSETESTS) skcycling -s -v --with-coverage --cover-package=skcycling
 
 html:
-	conda install -y sphinx sphinx_rtd_theme
+	conda install -y sphinx sphinx_rtd_theme numpydoc
 	export SPHINXOPTS=-W; make -C doc html
