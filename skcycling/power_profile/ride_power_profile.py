@@ -23,8 +23,8 @@ def _rpp_parallel(X, idx_t_rpp):
     idx_t_rpp : int
         Index of the time to compute the rpp.
 
-    Return
-    ------
+    Returns
+    -------
     power : float
         Returns the best power for the given duration of the rpp.
     """
@@ -95,8 +95,8 @@ class RidePowerProfile(BasePowerProfile):
             The corresponding fit file from which the power-profile will be
             extracted from.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
             Returns self.
         """

@@ -34,8 +34,8 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
     method : string, default 'lsq'
         Which type of tehcnic to use to make the fitting ('lsq', 'lm').
 
-    Return
-    ------
+    Returns
+    -------
     pma : float
         Maximum Aerobic Power.
 
@@ -63,9 +63,9 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
         - `std_err`: standard error of the fitting,
         - `coeff_det`: coefficient of determination.
 
-    Notes
-    -----
-    [1] Pinot et al., "Determination of Maximal Aerobic Power
+    References
+    ----------
+    .. [1] Pinot et al., "Determination of Maximal Aerobic Power
     on the Field in Cycling" (2014)
     """
     # Check that the profile is inherating from the class BasePowerProfile

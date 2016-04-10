@@ -36,8 +36,8 @@ class BasePowerProfile(object):
         filename : str
             Filename to the pickle file. The extension should be `.p`.
 
-        Return
-        ------
+        Returns
+        -------
         bpp : object
             Returns BasePowerProfile.
         """
@@ -56,8 +56,8 @@ class BasePowerProfile(object):
         filename : str
             Filename to the pickle file. The extension should be `.p`.
 
-        Return
-        ------
+        Returns
+        -------
         None
         """
         # We need to check that the directory where the file will be exist
@@ -95,10 +95,10 @@ class BasePowerProfile(object):
         normalized : bool, default False
             Return a weight-normalized rpp if True.
 
-        Return
-        ------
+        Returns
+        -------
         data : array-like, shape (n_samples, )
-            Return a resampled record power-profile.
+            Returns a resampled record power-profile.
         """
 
         # Shall used the rpp or weight-normalized rpp

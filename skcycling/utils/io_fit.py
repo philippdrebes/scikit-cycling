@@ -18,8 +18,8 @@ def load_power_from_fit(filename):
     filename : str,
         Path to the FIT file.
 
-    Return
-    ------
+    Returns
+    -------
     power_rec : ndarray, shape (n_samples)
         Power records of the ride.
 

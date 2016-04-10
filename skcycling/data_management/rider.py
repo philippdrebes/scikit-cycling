@@ -77,8 +77,8 @@ class Rider(object):
         rides_pp : list of RidePowerProfile
             Normally a list of RidePowerProfile.
 
-        Return
-        ------
+        Returns
+        -------
         rides_pp : list of RidePowerProfile
             Return the validated list of RidePowerProfile.
         """
@@ -114,8 +114,8 @@ class Rider(object):
         filename : str
             Filename to the pickle file. The extension should be `.p`.
 
-        Return
-        ------
+        Returns
+        -------
         bpp : object
             Returns Rider.
         """
@@ -134,8 +134,8 @@ class Rider(object):
         filename : str
             Filename to the pickle file. The extension should be `.p`.
 
-        Return
-        ------
+        Returns
+        -------
         None
         """
         # We need to check that the directory where the file will be exist
@@ -164,7 +164,8 @@ class Rider(object):
         verbose : bool
             Show information of the process.
 
-        Return:
+        Returns
+        -------
         self : object
             Returns self.
         """
@@ -200,8 +201,8 @@ class Rider(object):
         filename : str
             Filename of the fit file to add.
 
-        Return
-        ------
+        Returns
+        -------
         self : obj
             Returns self.
         """
@@ -226,8 +227,8 @@ class Rider(object):
         date_ride : date
             The date of the ride to remove.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
             Returns self.
         """
@@ -257,8 +258,8 @@ class Rider(object):
             Starting and finishing date to consider to compute the date.
             If None, the full range will be considered.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
             Returns self.
         """

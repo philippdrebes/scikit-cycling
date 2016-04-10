@@ -19,8 +19,8 @@ def res_std_dev(model, estimate):
     estimate : array-like, shape (n_sample, )
          Value obtained by fitting.
 
-    Return
-    ------
+    Returns
+    -------
     residual : float
         Residual standard deviation.
     """
@@ -44,8 +44,8 @@ def r_squared(model, estimate):
     estimate : array-like, shape (n_sample, )
          Value obtained by fitting.
 
-    Return
-    ------
+    Returns
+    -------
     coeff_det : float
         Coefficient of determination.
     """
@@ -83,8 +83,8 @@ def log_linear_fitting(x, y, method='lsq'):
         - If 'lsq', an ordinary least-square approach is used.
         - If 'lm', the Levenberg-Marquardt is used.
 
-    Return
-    ------
+    Returns
+    -------
     slope : float
         slope of the regression line.
 
@@ -148,8 +148,8 @@ def linear_model(x, slope, intercept):
     intercept : float
         Intercept of the linear equation.
 
-    Return
-    ------
+    Returns
+    -------
     y : ndarray, shape (n_samples)
         Output of the linear model.
     """
@@ -171,8 +171,8 @@ def log_linear_model(x, slope, intercept):
     intercept : float
         Intercept of the linear equation.
 
-    Return
-    ------
+    Returns
+    -------
     y : ndarray, shape (n_samples)
         Output of the linear model.
     """

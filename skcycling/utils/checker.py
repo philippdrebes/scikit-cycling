@@ -13,6 +13,10 @@ def check_X(X):
     Parameters
     ----------
     X : array-like, shape = (data, )
+
+    Returns
+    -------
+    None
     """
 
     # Check that X is a numpy vector
@@ -34,6 +38,10 @@ def check_float(X):
     ----------
     X :
         Value to check and convert if not float
+
+    Returns
+    -------
+    None
     """
 
     # Check that the value is a float
@@ -51,8 +59,8 @@ def check_filename_fit(filename):
     filename : str
         The fit file to check.
 
-    Return
-    ------
+    Returns
+    -------
     filename : str
         The checked filename.
     """
@@ -80,8 +88,8 @@ def check_filename_pickle_load(filename):
     filename : str
         The pickle file to check.
 
-    Return
-    ------
+    Returns
+    -------
     filename : str
         The checked filename.
     """
@@ -104,13 +112,13 @@ def check_filename_pickle_load(filename):
 def check_filename_pickle_save(filename):
     """ Function to check the extension of the pickle file.
 
-    Parameter
-    ---------
+    Parameters
+    ----------
     filename : str
         The filename which needs to be checked.
 
-    Return
-    ------
+    Returns
+    -------
     filename : str
         The filename which has been checked.
     """
@@ -133,8 +141,8 @@ def check_tuple_date(date_tuple):
     date_tuple : tuple of date, shape (start, finish)
         The tuple to check.
 
-    Return
-    ------
+    Returns
+    -------
     date_tuple : tuple of date, shape (start, finish)
         The validated tuple.
     """

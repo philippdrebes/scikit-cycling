@@ -166,7 +166,7 @@ def training_stress_pma_score(X, pma):
 def pma2ftp(pma):
     """ Convert the PMA to FTP
 
-    Parameter:
+    Parameters
     ----------
     pma : float
         Maximum Anaerobic Power.
@@ -183,7 +183,7 @@ def pma2ftp(pma):
 def ftp2pma(ftp):
     """ Convert the PMA to FTP
 
-    Parameter:
+    Parameters
     ----------
     ftp : float
         Functioning Threhold Power.

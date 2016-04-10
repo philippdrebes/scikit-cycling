@@ -16,8 +16,8 @@ def maximal_mean_power(ride_pp):
     ride_pp : list of RidePowerProfile
         The list from the power-profile to consider.
 
-    Return
-    ------
+    Returns
+    -------
     mmp : ndarray, shape (max_duration_profile_, )
         The Maximal Mean Power for the different time
     """
@@ -87,8 +87,8 @@ class RecordPowerProfile(BasePowerProfile):
         ride_pp : list of RidePowerProfile
             Normally a list of RidePowerProfile.
 
-        Return
-        ------
+        Returns
+        -------
         ride_pp : list of RidePowerProfile
             Return the validated list of RidePowerProfile.
         """
@@ -132,8 +132,8 @@ class RecordPowerProfile(BasePowerProfile):
             The starting and finishing date for which we have to compute the
             record power-profile.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
             Returns self.
         """
