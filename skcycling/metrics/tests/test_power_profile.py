@@ -66,7 +66,7 @@ def test_amm_default_params():
     my_ride_rpp.data_ = data[:len(my_ride_rpp.data_)]
     my_ride_rpp.data_norm_ = my_ride_rpp.data_ / my_ride_rpp.cyclist_weight_
 
-    pma, t_pma, aei = aerobic_meta_model(my_ride_rpp)
+    pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting = aerobic_meta_model(my_ride_rpp)
 
     # Check the different value
     assert_almost_equal(pma, 453.37229888268155,
@@ -95,7 +95,7 @@ def test_aerobic_meta_model_ts():
     my_ride_rpp.data_norm_ = my_ride_rpp.data_ / my_ride_rpp.cyclist_weight_
 
     ts_reg = np.array([3., 4., 5., 6., 7., 10, 20, 30, 45, 60, 120, 180, 240])
-    pma, t_pma, aei = aerobic_meta_model(my_ride_rpp, ts=ts_reg)
+    pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting = aerobic_meta_model(my_ride_rpp, ts=ts_reg)
 
     # Check the different value
     assert_almost_equal(pma, 453.37229888268155,
@@ -124,7 +124,7 @@ def test_aerobic_meta_model_weight():
     my_ride_rpp.data_ = data[:len(my_ride_rpp.data_)]
     my_ride_rpp.data_norm_ = my_ride_rpp.data_ / my_ride_rpp.cyclist_weight_
 
-    pma, t_pma, aei = aerobic_meta_model(my_ride_rpp, normalized=True)
+    pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting = aerobic_meta_model(my_ride_rpp, normalized=True)
 
     # Check the different value
     assert_almost_equal(pma, 7.5562049813780261,
@@ -153,7 +153,7 @@ def test_aerobic_meta_model_lm():
     my_ride_rpp.data_ = data[:len(my_ride_rpp.data_)]
     my_ride_rpp.data_norm_ = my_ride_rpp.data_ / my_ride_rpp.cyclist_weight_
 
-    pma, t_pma, aei = aerobic_meta_model(my_ride_rpp, method='lm')
+    pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting = aerobic_meta_model(my_ride_rpp, method='lm')
 
     # Check the different value
     assert_almost_equal(pma, 453.37229888268155,
@@ -195,7 +195,7 @@ def test_amm_cropping_ts():
     ts_reg = np.array([3., 4., 5., 6., 7., 10, 20,
                        30, 45, 60, 120, 180, 240, 300])
     assert_warns(UserWarning, aerobic_meta_model, my_ride_rpp, ts=ts_reg)
-    pma, t_pma, aei = aerobic_meta_model(my_ride_rpp, ts=ts_reg)
+    pma, t_pma, aei, fit_info_pma_fitting, fit_info_aei_fitting = aerobic_meta_model(my_ride_rpp, ts=ts_reg)
 
     # Check the different value
     assert_almost_equal(pma, 453.37229888268155,
