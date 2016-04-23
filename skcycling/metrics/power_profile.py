@@ -14,8 +14,7 @@ SAMPLING_WKO = np.array([0.016, 0.083, 0.5, 1, 3, 3.5, 4, 4.5, 5, 5.5,
 
 
 def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
-    """ Compute the aerobic metabolism model from the
-        record power-profile
+    """Compute the aerobic metabolism model from the record power-profile.
 
     Parameters
     ----------
@@ -63,10 +62,16 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
         - `std_err`: standard error of the fitting,
         - `coeff_det`: coefficient of determination.
 
+    Notes
+    -----
+    The method implemented here follow the work presented in [1]_.
+
     References
     ----------
     .. [1] Pinot et al., "Determination of Maximal Aerobic Power
-    on the Field in Cycling" (2014)
+       on the Field in Cycling", Jounal of Science and Cycling, vol. 3(1),
+       pp. 26-31, 2014.
+
     """
     # Check that the profile is inherating from the class BasePowerProfile
     if not issubclass(type(profile), BasePowerProfile):

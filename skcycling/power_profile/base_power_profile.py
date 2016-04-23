@@ -1,5 +1,4 @@
-""" Basic class for power profile.
-"""
+"""Basic class for power profile."""
 
 import os
 import numpy as np
@@ -14,7 +13,7 @@ from ..utils.checker import check_filename_pickle_save
 
 
 class BasePowerProfile(object):
-    """ Basic class for power profile.
+    """Basic class for power profile.
 
     Warning: This class should not be used directly. Use the derive classes
     instead.
@@ -23,13 +22,13 @@ class BasePowerProfile(object):
 
     @abstractmethod
     def __init__(self, max_duration_profile=None, cyclist_weight=None):
-        """ Constructor. """
+        """Constructor."""
         self.max_duration_profile_ = max_duration_profile
         self.cyclist_weight_ = cyclist_weight
 
     @staticmethod
     def load_from_pickles(filename):
-        """ Function to load an object through pickles.
+        """Function to load an object through pickles.
 
         Parameters
         ----------
@@ -40,6 +39,7 @@ class BasePowerProfile(object):
         -------
         bpp : object
             Returns BasePowerProfile.
+
         """
         # Check the consistency of the filename
         filename = check_filename_pickle_load(filename)
@@ -49,7 +49,7 @@ class BasePowerProfile(object):
         return bpp
 
     def save_to_pickles(self, filename):
-        """ Function to save an object through pickles.
+        """Function to save an object through pickles.
 
         Parameters
         ----------
@@ -59,6 +59,7 @@ class BasePowerProfile(object):
         Returns
         -------
         None
+
         """
         # We need to check that the directory where the file will be exist
         dir_pickle = os.path.dirname(filename)
@@ -73,11 +74,11 @@ class BasePowerProfile(object):
 
     @abstractmethod
     def fit(self):
-        """ Method to compute the power profile. """
+        """Method to compute the power profile."""
         raise NotImplementedError
 
     def resampling_rpp(self, ts, method_interp='linear', normalized=False):
-        """ Resampling the record power-profile
+        """Resampling the record power-profile
 
         Parameters
         ----------
@@ -99,6 +100,7 @@ class BasePowerProfile(object):
         -------
         data : array-like, shape (n_samples, )
             Returns a resampled record power-profile.
+
         """
 
         # Shall used the rpp or weight-normalized rpp

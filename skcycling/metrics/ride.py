@@ -25,7 +25,7 @@ ESIE_SCALE_GRAPPE = dict([('I1', (.3, .5)), ('I2', (.5, .6)),
 
 
 def normalized_power_score(X, pma):
-    """ Compute the normalized power for a given ride
+    """Compute the normalized power for a given ride.
 
     Parameters
     ----------
@@ -39,6 +39,7 @@ def normalized_power_score(X, pma):
     -------
     score : float
         Return the normalized power.
+
     """
 
     # Check the conformity of X and pma
@@ -48,7 +49,7 @@ def normalized_power_score(X, pma):
     # Denoise the rpp through moving average using 30 sec filter
     x_avg = moving_average(X, win=30)
 
-    # Removing value < I1-ESIE, i.e. 30 % PMA
+    # Removing value < I1-ESIE, i.e. 30 % MAP
     x_avg = np.delete(x_avg, np.nonzero(x_avg <
                                         (ESIE_SCALE_GRAPPE['I1'][0] * pma)))
 
@@ -58,7 +59,7 @@ def normalized_power_score(X, pma):
 
 
 def intensity_factor_ftp_score(X, ftp):
-    """ Compute the intensity factor using the FTP
+    """Compute the intensity factor using the FTP.
 
     Parameters
     ----------
@@ -72,6 +73,7 @@ def intensity_factor_ftp_score(X, ftp):
     -------
     score: float
         Return the intensity factor.
+
     """
 
     # Check the conformity of X and ftp
@@ -85,7 +87,7 @@ def intensity_factor_ftp_score(X, ftp):
 
 
 def intensity_factor_pma_score(X, pma):
-    """ Compute the intensity factor using the PMAB
+    """Compute the intensity factor using the MAP.
 
     Parameters
     ----------
@@ -99,6 +101,7 @@ def intensity_factor_pma_score(X, pma):
     -------
     score: float
         Return the intensity factor.
+
     """
 
     # Check the conformity of X and pma
@@ -110,7 +113,7 @@ def intensity_factor_pma_score(X, pma):
 
 
 def training_stress_ftp_score(X, ftp):
-    """ Compute the training stress score using the FTP
+    """Compute the training stress score using the FTP.
 
     Parameters
     ----------
@@ -139,7 +142,7 @@ def training_stress_ftp_score(X, ftp):
 
 
 def training_stress_pma_score(X, pma):
-    """ Compute the training stress score
+    """Compute the training stress score.
 
     Parameters
     ----------
@@ -153,6 +156,7 @@ def training_stress_pma_score(X, pma):
     -------
     score: float
         Return the training stress score.
+
     """
 
     # Check the conformity of X and pma
@@ -164,7 +168,7 @@ def training_stress_pma_score(X, pma):
 
 
 def pma2ftp(pma):
-    """ Convert the PMA to FTP
+    """Convert the MAP to FTP.
 
     Parameters
     ----------
@@ -175,13 +179,14 @@ def pma2ftp(pma):
     -------
     ftp : float
         Functioning Threhold Power.
+
     """
 
     return 0.76 * pma
 
 
 def ftp2pma(ftp):
-    """ Convert the PMA to FTP
+    """Convert the MAP to FTP.
 
     Parameters
     ----------
@@ -192,14 +197,14 @@ def ftp2pma(ftp):
     -------
     pma : float
         Maximum Anaerobic Power.
+
     """
 
     return ftp / 0.76
 
 
 def training_stress_pma_grappe_score(X, pma):
-    """ Compute the training stress score using the PMA,
-        considering Grappe et al. approach
+    """Compute the training stress score using the MAP.
 
     Parameters
     ----------
@@ -213,6 +218,7 @@ def training_stress_pma_grappe_score(X, pma):
     -------
     tss_score: float
         Return the training stress score.
+
     """
 
     # Check the consistency of X and pma
@@ -236,8 +242,7 @@ def training_stress_pma_grappe_score(X, pma):
 
 
 def training_stress_ftp_grappe_score(X, ftp):
-    """ Compute the training stress score using the FTP,
-        considering Grappe et al. approach
+    """Compute the training stress score using the FTP.
 
     Parameters
     ----------

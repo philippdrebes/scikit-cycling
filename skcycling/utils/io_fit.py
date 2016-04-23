@@ -1,6 +1,4 @@
-"""
-Methods to handle input/output files.
-"""
+"""Methods to handle input/output files."""
 
 import warnings
 import numpy as np
@@ -9,9 +7,11 @@ from fitparse import FitFile
 
 from .checker import check_filename_fit
 
+from ..restoration import outliers_rejection
+
 
 def load_power_from_fit(filename):
-    """ Method to open the power data from FIT file into a numpy array.
+    """Method to open the power data from FIT file into a numpy array.
 
     Parameters
     ----------
@@ -24,7 +24,8 @@ def load_power_from_fit(filename):
         Power records of the ride.
 
     date_rec : date
-        Date associated with the ride
+        Date associated with the ride.
+
     """
     # Check that the filename is existing
     filename = check_filename_fit(filename)
@@ -62,6 +63,9 @@ def load_power_from_fit(filename):
             power_rec[idx_rec] = 0.
             # We keep track of the number of inconsitent data
             warn_sample += 1
+
+    # Remove artefact if there is any
+    power_rec = outliers_rejection(power_rec)
 
     # Through a warning if there is no power data found
     if len(records) == warn_sample:

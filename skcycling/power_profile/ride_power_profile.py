@@ -1,5 +1,4 @@
-""" Ride Power-Profile class.
-"""
+"""Ride Power-Profile class."""
 
 import numpy as np
 
@@ -13,7 +12,7 @@ from ..utils import load_power_from_fit
 
 
 def _rpp_parallel(X, idx_t_rpp):
-    """ Function to compute the rpp in parallel
+    """Function to compute the rpp in parallel.
 
     Parameters
     ----------
@@ -27,6 +26,7 @@ def _rpp_parallel(X, idx_t_rpp):
     -------
     power : float
         Returns the best power for the given duration of the rpp.
+
     """
     # Slice the data such that we can compute efficiently the mean later
     t_crop = np.array([X[i:-idx_t_rpp + i:]
@@ -44,7 +44,7 @@ def _rpp_parallel(X, idx_t_rpp):
 
 
 class RidePowerProfile(BasePowerProfile):
-    """ Class to handle the power-profile for one ride.
+    """Class to handle the power-profile for one ride.
 
     Parameters
     ----------
@@ -79,6 +79,7 @@ class RidePowerProfile(BasePowerProfile):
 
     date_profile_ : date
         Date of the current power-profile.
+
     """
 
     def __init__(self, max_duration_profile=None, cyclist_weight=None):
@@ -87,7 +88,7 @@ class RidePowerProfile(BasePowerProfile):
                                                cyclist_weight)
 
     def fit(self, filename):
-        """ Read and build the power-profile from the fit file.
+        """Read and build the power-profile from the fit file.
 
         Parameters
         ----------
@@ -99,6 +100,7 @@ class RidePowerProfile(BasePowerProfile):
         -------
         self : object
             Returns self.
+
         """
         self.filename_ = check_filename_fit(filename)
 

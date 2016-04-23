@@ -1,5 +1,4 @@
-""" Helper function to check data conformity
-"""
+"""Helper function to check data conformity."""
 
 import os
 import numpy as np
@@ -8,15 +7,18 @@ from datetime import date
 
 
 def check_X(X):
-    """ Private function helper to check if X is of proper size
+    """Private function helper to check if X is of proper size
 
     Parameters
     ----------
-    X : array-like, shape = (data, )
+    X : ndarray, shape (data, )
+        Array to check the consistency.
 
     Returns
     -------
-    None
+    X : ndarray, shape (data, )
+        Array which is consistent.
+
     """
 
     # Check that X is a numpy vector
@@ -32,16 +34,18 @@ def check_X(X):
 
 
 def check_float(X):
-    """ Private function helper to check if the value is a float
+    """Private function helper to check if the value is a float
 
     Parameters
     ----------
-    X :
-        Value to check and convert if not float
+    X : float
+        Value to check and convert if not float.
 
     Returns
     -------
-    None
+    X : float
+        Value float which is consistent.
+
     """
 
     # Check that the value is a float
@@ -52,7 +56,7 @@ def check_float(X):
 
 
 def check_filename_fit(filename):
-    """ Method to check if the filename corresponds to a fit file.
+    """Method to check if the filename corresponds to a fit file.
 
     Parameters
     ----------
@@ -63,6 +67,7 @@ def check_filename_fit(filename):
     -------
     filename : str
         The checked filename.
+
     """
 
     # Check that filename is of string type
@@ -81,7 +86,7 @@ def check_filename_fit(filename):
 
 
 def check_filename_pickle_load(filename):
-    """ Method to check if the filename corresponds to a pickle file.
+    """Method to check if the filename corresponds to a pickle file.
 
     Parameters
     ----------
@@ -92,6 +97,7 @@ def check_filename_pickle_load(filename):
     -------
     filename : str
         The checked filename.
+
     """
 
     # Check that filename is of string type
@@ -110,7 +116,7 @@ def check_filename_pickle_load(filename):
 
 
 def check_filename_pickle_save(filename):
-    """ Function to check the extension of the pickle file.
+    """Function to check the extension of the pickle file.
 
     Parameters
     ----------
@@ -121,6 +127,7 @@ def check_filename_pickle_save(filename):
     -------
     filename : str
         The filename which has been checked.
+
     """
     # Check that the filename is a string
     if isinstance(filename, basestring):
@@ -134,7 +141,7 @@ def check_filename_pickle_save(filename):
 
 
 def check_tuple_date(date_tuple):
-    """ Function to check if the date tuple is consistent.
+    """Function to check if the date tuple is consistent.
 
     Parameters
     ----------
@@ -145,6 +152,7 @@ def check_tuple_date(date_tuple):
     -------
     date_tuple : tuple of date, shape (start, finish)
         The validated tuple.
+
     """
     if isinstance(date_tuple, tuple) and len(date_tuple) == 2:
         # Check that the tuple is of write type

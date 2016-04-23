@@ -1,5 +1,4 @@
-""" Record Power-Profile class.
-"""
+"""Record Power-Profile class."""
 
 import numpy as np
 
@@ -9,7 +8,7 @@ from .ride_power_profile import RidePowerProfile
 from ..utils.checker import check_tuple_date
 
 def maximal_mean_power(ride_pp):
-    """ Function to compute the maximal mean power for different time.
+    """Function to compute the maximal mean power for different time.
 
     Parameters
     ----------
@@ -39,7 +38,7 @@ def maximal_mean_power(ride_pp):
     return np.max(profile, axis=0)
 
 class RecordPowerProfile(BasePowerProfile):
-    """ Record power-profile
+    """Record power-profile.
 
     Parameters
     ----------
@@ -71,6 +70,7 @@ class RecordPowerProfile(BasePowerProfile):
 
     date_profile_ : tuple of date, shape (start, finish)
         Starting and finishing time to compute the record power-profile.
+
     """
 
     def __init__(self, max_duration_profile=None,
@@ -80,7 +80,7 @@ class RecordPowerProfile(BasePowerProfile):
                                                  cyclist_weight)
 
     def _validate_ride_pp(self, ride_pp):
-        """ Method to check the consistency of the ride power-profile list.
+        """Method to check the consistency of the ride power-profile list.
 
         Parameters
         ----------
@@ -91,6 +91,7 @@ class RecordPowerProfile(BasePowerProfile):
         -------
         ride_pp : list of RidePowerProfile
             Return the validated list of RidePowerProfile.
+
         """
         # Check that this is a list
         if isinstance(ride_pp, list):
@@ -100,7 +101,8 @@ class RecordPowerProfile(BasePowerProfile):
                     raise ValueError('The object in the list need to be from'
                                      ' the type RidePowerProfile')
                 # We need to check that each ride has been fitted
-                if getattr(rpp, 'data_', None) is None or rpp.max_duration_profile_ is None:
+                if (getattr(rpp, 'data_', None) is None or
+                    rpp.max_duration_profile_ is None):
                     raise ValueError('One of the ride never has been fitted.'
                                      ' Fit before to compute the record rpp.')
             # Create a list of all the max duration to check that they are
@@ -120,8 +122,7 @@ class RecordPowerProfile(BasePowerProfile):
                              ' a list.')
 
     def fit(self, ride_pp, date_profile=None):
-        """ Function to build the record power-profile from a list of ride
-        power-profile.
+        """Build the record power-profile from a list of ride power-profile.
 
         Parameters
         ----------
@@ -136,6 +137,7 @@ class RecordPowerProfile(BasePowerProfile):
         -------
         self : object
             Returns self.
+
         """
         # Check that the ride power-profile list is ok
         ride_pp = self._validate_ride_pp(ride_pp)

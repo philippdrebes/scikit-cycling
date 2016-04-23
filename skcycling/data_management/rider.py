@@ -22,6 +22,11 @@ from ..utils.checker import check_tuple_date
 class Rider(object):
     """ Rider class to aggregate all the different power tools.
 
+    This class should be the main class used to handle all the data.
+    In this object, the information about the power-profile of each
+    ride will be stored. Furthermore, a record power-profile can
+    be updated by providing some starting and ending date.
+
     Parameters
     ----------
     max_duration_profile : int
@@ -66,8 +71,10 @@ class Rider(object):
             self.rides_pp_ = self._validate_rides_pp(rides_pp)
 
         # Initialize the record_pp by default
-        self.record_pp_ = RecordPowerProfile(max_duration_profile=self.max_duration_profile_,
-                                             cyclist_weight=self.cyclist_weight_)
+        self.record_pp_ = RecordPowerProfile(max_duration_profile=\
+                                             self.max_duration_profile_,
+                                             cyclist_weight=\
+                                             self.cyclist_weight_)
 
     def _validate_rides_pp(self, rides_pp):
         """ Method to check the consistency of the ride power-profile list.
@@ -90,7 +97,8 @@ class Rider(object):
                     raise ValueError('The object in the list need to be from'
                                      ' the type RidePowerProfile')
                 # We need to check that each ride has been fitted
-                if getattr(rpp, 'data_', None) is None or rpp.max_duration_profile_ is None:
+                if (getattr(rpp, 'data_', None) is None or
+                    rpp.max_duration_profile_ is None):
                     raise ValueError('One of the ride never has been fitted.'
                                      ' Fit before to compute the record rpp.')
             # Create a list of all the max duration to check that they are
@@ -150,8 +158,7 @@ class Rider(object):
         return None
 
     def add_rides_from_path(self, path, overwrite=False, verbose=True):
-        """ Function which allows to read and fit some ride and add them to
-        the current list of ride.
+        """ Read a `fit` file, fit it, and add it to the rider profile.
 
         Parameters
         ----------
@@ -180,7 +187,8 @@ class Rider(object):
             if filename.endswith('.fit'):
                 if verbose:
                     print 'Process the file: {}'.format(filename)
-                rpp = RidePowerProfile(max_duration_profile=self.max_duration_profile_,
+                rpp = RidePowerProfile(max_duration_profile=\
+                                       self.max_duration_profile_,
                                        cyclist_weight=self.cyclist_weight_)
                 rpp.fit(os.path.join(path, filename))
                 rides_rpp.append(rpp)

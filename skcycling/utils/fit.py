@@ -1,6 +1,4 @@
-"""
-Methods to help for mathematical fitting.
-"""
+"""Methods to help for mathematical fitting."""
 
 import numpy as np
 
@@ -9,7 +7,7 @@ from scipy.optimize import curve_fit
 
 
 def res_std_dev(model, estimate):
-    """ Function to compute the residual standard deviation
+    """Function to compute the residual standard deviation.
 
     Parameters
     ----------
@@ -23,6 +21,7 @@ def res_std_dev(model, estimate):
     -------
     residual : float
         Residual standard deviation.
+
     """
 
     if model.shape != estimate.shape:
@@ -34,7 +33,7 @@ def res_std_dev(model, estimate):
 
 
 def r_squared(model, estimate):
-    """ Function to compute the coefficient of determination
+    """Function to compute the coefficient of determination.
 
     Parameters
     ----------
@@ -48,6 +47,7 @@ def r_squared(model, estimate):
     -------
     coeff_det : float
         Coefficient of determination.
+
     """
 
     if model.shape != estimate.shape:
@@ -67,7 +67,7 @@ def r_squared(model, estimate):
 
 
 def log_linear_fitting(x, y, method='lsq'):
-    """ Function to perform log linear regression.
+    """Function to perform log linear regression.
 
     Parameters
     ----------
@@ -96,6 +96,7 @@ def log_linear_fitting(x, y, method='lsq'):
 
     coeff_det : float
         Coefficient of determination.
+
     """
 
     # Check that the array x and y have the same size
@@ -135,7 +136,7 @@ def log_linear_fitting(x, y, method='lsq'):
 
 
 def linear_model(x, slope, intercept):
-    """ Function wich return value of a linear model.
+    """Function wich return value of a linear model.
 
     Parameters
     ----------
@@ -152,13 +153,14 @@ def linear_model(x, slope, intercept):
     -------
     y : ndarray, shape (n_samples)
         Output of the linear model.
+
     """
 
     return slope * x + intercept
 
 
 def log_linear_model(x, slope, intercept):
-    """ Function wich return value of a log linear model.
+    """Function wich return value of a log linear model.
 
     Parameters
     ----------
@@ -175,6 +177,7 @@ def log_linear_model(x, slope, intercept):
     -------
     y : ndarray, shape (n_samples)
         Output of the linear model.
+
     """
 
     return slope * np.log(x) + intercept

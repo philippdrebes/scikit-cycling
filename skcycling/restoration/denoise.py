@@ -1,5 +1,4 @@
-""" Methods to denoise the power signal provided from a ride
-"""
+"""Methods to denoise the power signal provided from a ride."""
 
 import numpy as np
 
@@ -7,7 +6,7 @@ from ..utils.checker import check_X
 
 
 def outliers_rejection(X, method='threshold', thres=2500.):
-    """ Remove the outliers from the given ride
+    """Remove the outliers from the given ride.
 
     Parameters
     ----------
@@ -25,6 +24,7 @@ def outliers_rejection(X, method='threshold', thres=2500.):
     -------
     X : array-like, shape (n_samples, )
         Array containing the power intensities, outliers free.
+
     """
 
     # Check if the variable X is valid
@@ -43,7 +43,7 @@ def outliers_rejection(X, method='threshold', thres=2500.):
 
 
 def moving_average(X, win=30):
-    """ Apply an average filter to the data
+    """Apply an average filter to the data.
 
     Parameters
     ----------
