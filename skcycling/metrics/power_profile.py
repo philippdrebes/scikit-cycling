@@ -149,8 +149,8 @@ def aerobic_meta_model(profile, ts=None, normalized=False, method='lsq'):
 
     # Apply a new regression with the aei value
     aei, intercept, std_err, coeff_det = log_linear_fitting(ts_aei_reg,
-                                      rpp_aei_reg,
-                                      method)
+                                                            rpp_aei_reg,
+                                                            method)
 
     # Store the value inside a dictionary
     fit_info_aei_fitting = {'slope' : aei, 'intercept' : intercept,
