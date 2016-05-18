@@ -53,7 +53,7 @@ def test_intensity_factor_pma_score():
 def test_training_stress_ftp_score():
     """ Testing the function to compute the TSS from FTP """
 
-    tss_score_ftp_gt = 0.12231205167568783
+    tss_score_ftp_gt = 12.231205167568783
     tss_score_ftp = training_stress_ftp_score(ride, ftp)
     assert_almost_equal(tss_score_ftp, tss_score_ftp_gt)
 
@@ -61,7 +61,7 @@ def test_training_stress_ftp_score():
 def test_training_stress_pma_score():
     """ Testing the function to compute the TSS from PMA """
 
-    tss_score_pma_gt = 0.12231205167568783
+    tss_score_pma_gt = 12.231205167568783
     tss_score_pma = training_stress_pma_score(ride, pma)
     assert_almost_equal(tss_score_pma, tss_score_pma_gt)
 

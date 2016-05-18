@@ -138,7 +138,7 @@ def training_stress_ftp_score(X, ftp):
     if_score = intensity_factor_ftp_score(X, ftp)
 
     # Compute the training stress score
-    return (X.size * if_score ** 2) / 3600.
+    return (X.size * if_score ** 2) / 3600. * 100.
 
 
 def training_stress_pma_score(X, pma):
