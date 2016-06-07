@@ -25,15 +25,15 @@ popd
 # Configure the conda environment and put it in the path using the
 # provided versions
 conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
-      numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION \
-        libgfortran nomkl
-source activate testenv
+    numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION \
+    libgfortran nomkl
+
+#source activate testenv
 
 # Install nose-timer via pip
 pip install nose-timer
 
-# Install libgfortran with conda
-conda install --yes libgfortran
+conda install --yes libgfortran numpy scipy six
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
