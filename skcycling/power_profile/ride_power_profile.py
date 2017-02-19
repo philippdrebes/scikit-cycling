@@ -1,4 +1,5 @@
 """Ride Power-Profile class."""
+from __future__ import division
 
 import numpy as np
 
@@ -7,7 +8,6 @@ from joblib import Parallel, delayed
 from .base_power_profile import BasePowerProfile
 
 from ..utils import check_filename_fit
-from ..utils import check_X
 from ..utils import load_power_from_fit
 
 
@@ -29,8 +29,7 @@ def _rpp_parallel(X, idx_t_rpp):
 
     """
     # Slice the data such that we can compute efficiently the mean later
-    t_crop = np.array([X[i:-idx_t_rpp + i:]
-                       for i in range(idx_t_rpp)])
+    t_crop = np.array([X[i:-idx_t_rpp + i:] for i in range(idx_t_rpp)])
     # Check that there is some value cropped. In the case that
     # the duration is longer than the file, the table crop is
     # empty
@@ -60,6 +59,9 @@ class RidePowerProfile(BasePowerProfile):
 
     Attributes
     ----------
+    filename_ : str
+        The corresponding fit file attached to this power-profile.
+
     data_ : array-like, shape (60 * max_duration_rpp, )
         Array in which the record power-profile is stored.
         The units used is the second.
@@ -68,24 +70,28 @@ class RidePowerProfile(BasePowerProfile):
         Array in which the weight-normalized record power-profile
         is stored. The units used is the seconds.
 
-    max_duration_data_ : int
-        The maximum duration of the record power-profile.
-
-    cyclist_weight_ : float
-        Cyclist weight.
-
-    filename_ : str
-        The corresponding fit file attached to this power-profile.
-
     date_profile_ : date
         Date of the current power-profile.
-
     """
 
-    def __init__(self, max_duration_profile=None, cyclist_weight=None):
+    def __init__(self, max_duration_profile=300, cyclist_weight=60., n_jobs=1):
         # Call the constructor of the parent class
         super(RidePowerProfile, self).__init__(max_duration_profile,
                                                cyclist_weight)
+        self.n_jobs = n_jobs
+
+    def __str__(self):
+        if hasattr(self, 'filename_'):
+            info = (
+                "filename: {}\n date: {}\n weight: {}\n duration profile: "
+                "{}\n data: {}".format(self.filename_, self.date_profile_,
+                                       self.cyclist_weight,
+                                       self.max_duration_profile, self.data_))
+        else:
+            info = ("\n weight: {}\n duration profile: {}".format(
+                self.cyclist_weight, self.max_duration_profile))
+
+        return info
 
     def fit(self, filename):
         """Read and build the power-profile from the fit file.
@@ -100,7 +106,6 @@ class RidePowerProfile(BasePowerProfile):
         -------
         self : object
             Returns self.
-
         """
         self.filename_ = check_filename_fit(filename)
 
@@ -109,22 +114,23 @@ class RidePowerProfile(BasePowerProfile):
 
         # Compute the ride power profile
         # Check that the power data are ok
-        ride_power = check_X(ride_power)
+        if len(ride_power.shape) != 1:
+            raise ValueError('X should have 1 dimension. Got {},'
+                             'instead'.format(len(ride_power.shape)))
 
         # Compute the rpp in parallel
         # Check that the maximum duration of the profile was given
-        if self.max_duration_profile_ is None:
+        if self.max_duration_profile is None:
             raise ValueError('You need to specify the maximum duration that is'
                              ' required during the profile computation.')
         # Make the processing with all the available processor
-        pp = Parallel(n_jobs=-1)(delayed(_rpp_parallel)(ride_power,
-                                                        idx_t_rpp)
-                                 for idx_t_rpp
-                                 in range(60 * self.max_duration_profile_))
+        pp = Parallel(n_jobs=self.n_jobs)(
+            delayed(_rpp_parallel)(ride_power, idx_t_rpp)
+            for idx_t_rpp in range(60 * self.max_duration_profile))
         self.data_ = np.array(pp)
         # Compute the normalized rpp if we should
-        if self.cyclist_weight_ is not None:
-            self.data_norm_ = self.data_ / self.cyclist_weight_
+        if self.cyclist_weight is not None:
+            self.data_norm_ = self.data_ / self.cyclist_weight
         else:
             self.data_norm_ = None
 

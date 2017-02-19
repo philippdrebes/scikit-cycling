@@ -5,6 +5,8 @@ def configuration(parent_package='', top_path=None):
 
     config.add_subpackage('data_management')
     config.add_subpackage('data_management/tests')
+    config.add_subpackage('datasets')
+    config.add_subpackage('datasets/tests')
     config.add_subpackage('metrics')
     config.add_subpackage('metrics/tests')
     config.add_subpackage('power_profile')
@@ -15,6 +17,7 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('utils/tests')
 
     return config
+
 
 if __name__ == "__main__":
     from numpy.distutils.core import setup

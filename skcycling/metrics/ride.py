@@ -6,13 +6,11 @@ the better.
 Function named as ``*_error`` or ``*_loss`` return a scalar value to minimize:
 the lower the better.
 """
+from __future__ import division
 
 import numpy as np
 
 from ..restoration.denoise import moving_average
-
-from ..utils.checker import check_X
-from ..utils.checker import check_float
 
 TS_SCALE_GRAPPE = dict([('I1', 2.), ('I2', 2.5), ('I3', 3.),
                         ('I4', 3.5), ('I5', 4.5), ('I6', 7.),
@@ -43,8 +41,9 @@ def normalized_power_score(X, pma):
     """
 
     # Check the conformity of X and pma
-    X = check_X(X)
-    pma = check_float(pma)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Denoise the rpp through moving average using 30 sec filter
     x_avg = moving_average(X, win=30)
@@ -55,7 +54,7 @@ def normalized_power_score(X, pma):
 
     # Compute the mean of the denoised ride elevated
     # at the power of 4
-    return np.mean(x_avg ** 4.) ** (1. / 4.)
+    return np.mean(x_avg ** 4) ** (1 / 4)
 
 
 def intensity_factor_ftp_score(X, ftp):
@@ -75,10 +74,10 @@ def intensity_factor_ftp_score(X, ftp):
         Return the intensity factor.
 
     """
-
     # Check the conformity of X and ftp
-    X = check_X(X)
-    ftp = check_float(ftp)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Compute the normalized power
     np_score = normalized_power_score(X, ftp2pma(ftp))
@@ -105,8 +104,9 @@ def intensity_factor_pma_score(X, pma):
     """
 
     # Check the conformity of X and pma
-    X = check_X(X)
-    pma = check_float(pma)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Compute the resulting IF
     return intensity_factor_ftp_score(X, pma2ftp(pma))
@@ -129,16 +129,16 @@ def training_stress_ftp_score(X, ftp):
         Return the training stress score.
 
     """
-
     # Check the conformity of X and ftp
-    X = check_X(X)
-    ftp = check_float(ftp)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Compute the intensity factor score
     if_score = intensity_factor_ftp_score(X, ftp)
 
     # Compute the training stress score
-    return (X.size * if_score ** 2) / 3600. * 100.
+    return (X.size * if_score ** 2) / 3600 * 100
 
 
 def training_stress_pma_score(X, pma):
@@ -158,10 +158,10 @@ def training_stress_pma_score(X, pma):
         Return the training stress score.
 
     """
-
     # Check the conformity of X and pma
-    X = check_X(X)
-    pma = check_float(pma)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Compute the training stress score
     return training_stress_ftp_score(X, pma2ftp(pma))
@@ -181,7 +181,6 @@ def pma2ftp(pma):
         Functioning Threhold Power.
 
     """
-
     return 0.76 * pma
 
 
@@ -199,7 +198,6 @@ def ftp2pma(ftp):
         Maximum Anaerobic Power.
 
     """
-
     return ftp / 0.76
 
 
@@ -220,10 +218,10 @@ def training_stress_pma_grappe_score(X, pma):
         Return the training stress score.
 
     """
-
     # Check the consistency of X and pma
-    X = check_X(X)
-    pma = check_float(pma)
+    if len(X.shape) != 1:
+        raise ValueError('X should have 1 dimension. Got {}, instead'.format(
+            len(X.shape)))
 
     # Compute the stress for each item of the ESIE
     tss_grappe = 0.
@@ -233,7 +231,7 @@ def training_stress_pma_grappe_score(X, pma):
         # We need to convert it to minutes
         curr_stress = np.count_nonzero(
             np.bitwise_and(X >= ESIE_SCALE_GRAPPE[key_sc][0] * pma,
-                           X < ESIE_SCALE_GRAPPE[key_sc][1] * pma)) / 60.
+                           X < ESIE_SCALE_GRAPPE[key_sc][1] * pma)) / 60
 
         # Compute the cumulative stress
         tss_grappe += curr_stress * TS_SCALE_GRAPPE[key_sc]
@@ -258,5 +256,4 @@ def training_stress_ftp_grappe_score(X, ftp):
         Return the training stress score.
 
     """
-
     return training_stress_pma_grappe_score(X, ftp2pma(ftp))
