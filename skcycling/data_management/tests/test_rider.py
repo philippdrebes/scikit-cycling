@@ -185,14 +185,14 @@ def test_rider_delete_ride_no_date():
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
     rider.add_rides(filename)
     assert_raises_regex(ValueError, "The date should be a date object",
-                        rider.delete_ride, '2014, 05, 11')
+                        rider.delete_ride, '2014, 5, 11')
 
 
 def test_rider_delete_ride():
     filename = load_toy()[0]
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
     rider.add_rides(filename)
-    rider.delete_ride(date(2014, 5, 07))
+    rider.delete_ride(date(2014, 5, 7))
     assert_equal(len(rider.rides_pp_), 0)
 
 
@@ -200,8 +200,8 @@ def test_rider_delete_ride_warning_nothing():
     filename = load_toy()[0]
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
     rider.add_rides(filename)
-    rider.delete_ride(date(2014, 5, 07))
-    assert_warns(UserWarning, rider.delete_ride, date(2014, 5, 07))
+    rider.delete_ride(date(2014, 5, 7))
+    assert_warns(UserWarning, rider.delete_ride, date(2014, 5, 7))
     assert_equal(len(rider.rides_pp_), 0)
 
 

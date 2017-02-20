@@ -42,8 +42,8 @@ def test_record_pp_fit():
     assert_equal(record_pp.data_norm_, None)
     assert_equal(record_pp.max_duration_profile, 1)
     assert_equal(record_pp.cyclist_weight, None)
-    assert_equal(record_pp.date_profile_, (date(2014, 05, 07),
-                                           date(2014, 07, 26)))
+    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
+                                           date(2014, 7, 26)))
 
 
 def test_record_pp_fit_w_weight():
@@ -76,8 +76,8 @@ def test_record_pp_fit_w_weight():
     assert_allclose(record_pp.data_norm_, data / 60.)
     assert_equal(record_pp.max_duration_profile, 1)
     assert_allclose(record_pp.cyclist_weight, 60.)
-    assert_equal(record_pp.date_profile_, (date(2014, 05, 07),
-                                           date(2014, 07, 26)))
+    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
+                                           date(2014, 7, 26)))
 
 
 def test_record_pp_fit_date():
@@ -91,7 +91,7 @@ def test_record_pp_fit_date():
         ride.fit(filename)
     record_pp = RecordPowerProfile(max_duration_profile=1, cyclist_weight=60.)
     record_pp.fit(ride_pp_list,
-                  date_profile=(date(2014, 05, 07), date(2014, 05, 11)))
+                  date_profile=(date(2014, 5, 7), date(2014, 5, 11)))
 
     data = np.array([
         0., 717., 717., 590., 552.25, 552.6, 551.83333333, 550.42857143, 547.,
@@ -111,8 +111,8 @@ def test_record_pp_fit_date():
     assert_allclose(record_pp.data_norm_, data / 60.)
     assert_equal(record_pp.max_duration_profile, 1)
     assert_allclose(record_pp.cyclist_weight, 60.)
-    assert_equal(record_pp.date_profile_, (date(2014, 05, 07),
-                                           date(2014, 05, 11)))
+    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
+                                           date(2014, 5, 11)))
 
 
 def test_record_pp_fit_wrong_pp_type():

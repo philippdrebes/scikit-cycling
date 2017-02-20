@@ -225,7 +225,7 @@ def training_stress_pma_grappe_score(X, pma):
 
     # Compute the stress for each item of the ESIE
     tss_grappe = 0.
-    for key_sc in TS_SCALE_GRAPPE.iterkeys():
+    for key_sc in TS_SCALE_GRAPPE.keys():
 
         # Count the number of elements which corresponds to as sec
         # We need to convert it to minutes
