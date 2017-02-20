@@ -4,7 +4,6 @@ Helper to load some toy data.
 from os import listdir
 from os.path import dirname
 from os.path import join
-from os.path import abspath
 
 
 def load_toy(returned_type='list_file', set_data='normal'):
@@ -30,19 +29,19 @@ def load_toy(returned_type='list_file', set_data='normal'):
     if set_data == 'normal':
         if returned_type == 'list_file':
             return sorted([
-                join(abspath(module_path), 'data', name)
-                for name in listdir(join(abspath(module_path), 'data'))
+                join(module_path, 'data', name)
+                for name in listdir(join(module_path, 'data'))
                 if name.endswith('.fit')
             ])
         elif returned_type == 'path':
-            return join(abspath(module_path), 'data')
+            return join(module_path, 'data')
     elif set_data == 'corrupted':
         if returned_type == 'list_file':
             return sorted([
-                join(abspath(module_path), 'corrupted_data', name)
+                join(module_path, 'corrupted_data', name)
                 for name in listdir(
-                    join(abspath(module_path), 'corrupted_data'))
+                    join(module_path, 'corrupted_data'))
                 if name.endswith('.fit')
             ])
         elif returned_type == 'path':
-            return join(abspath(module_path), 'corrupted_data')
+            return join(module_path, 'corrupted_data')
