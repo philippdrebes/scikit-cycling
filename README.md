@@ -12,30 +12,6 @@ Goal
 
 This toolbox will aggregate some useful tools to read into power data acquired by cyclists.
 
-File Structure
---------------
-
-```
-.
-├── build_tools
-│   └── travis
-├── LICENSE
-├── Makefile
-├── README.md
-├── requirements.txt
-├── setup.cfg
-├── setup.py
-├── skcycling
-│   ├── __init__.py
-│   ├── metrics
-│   ├── power_profile
-│   ├── restoration
-│   ├── setup.py
-│   └── utils
-└── third-party
-    └── python-fitparse
-```
-
 Installation
 ------------
 
@@ -45,27 +21,13 @@ This package needs the following dependencies:
 
 * Numpy,
 * Scipy,
-* Joblib,
-* Fitparse.
-
-The package `fitparse` is part of this repository as a submodule. Follow the cloning and install procedure.
 
 ### Cloning
 
-You can clone this repository with the usual `git clone --recursive`.
+You can clone this repository with the usual `git clone`.
 
 ### Installation
 
-First, install the `fitparse` package attached as a submodule.
-
 ```
-cd third-party/python-fitparse
-python setup.py install
-```
-
-Then, go back to the root directory and install `skcycling`.
-
-```
-cd ../../
 python setup.py install
 ```
