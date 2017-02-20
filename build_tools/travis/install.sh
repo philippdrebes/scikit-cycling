@@ -45,11 +45,11 @@ if [[ "$DISTRIB" == "conda" ]]; then
     conda update --yes conda
     popd
 
-    conda create -n testenv --yes python=$PYTHON_VERSION pip nose six \
+    conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
           numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION
     source activate testenv
 
-    conda install --yes nose six libgfortran nomkl
+    conda install --yes nose libgfortran nomkl
 
     # Install nose-timer via pip
     pip install nose-timer
@@ -64,7 +64,4 @@ python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
 
-cd $TRAVIS_BUILD_DIR/third-party/python-fitparse
-python setup.py install
-cd $TRAVIS_BUILD_DIR
 python setup.py develop

@@ -70,6 +70,7 @@ if __SKCYCLING_SETUP__:
 else:
     __all__ = ['data_management',
                'datasets',
+               'externals',
                'metrics',
                'power_profile',
                'restoration',

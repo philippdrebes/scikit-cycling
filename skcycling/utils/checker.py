@@ -2,7 +2,8 @@
 
 import os
 from datetime import date
-import six
+
+from ..externals import six
 
 
 def check_filename_fit(filename):

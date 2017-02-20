@@ -16,6 +16,9 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('utils')
     config.add_subpackage('utils/tests')
 
+    # external libraries
+    config.add_subpackage('externals')
+
     return config
 
 
