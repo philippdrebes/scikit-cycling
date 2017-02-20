@@ -28,7 +28,7 @@ install:
 
   # Install other nilearn dependencies
   - "pip install coverage nose-timer"
-  - "python setup.py bdist_wheel"
+  - "python setup.py bdist_wheel bdist_wininst"
   - ps: "ls dist"
 
   # Install the generated wheel package to test it
