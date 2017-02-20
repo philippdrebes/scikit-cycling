@@ -214,10 +214,12 @@ class Rider(object):
 
         # Find if there is any date corresponding to the one specified by
         # the user
+        b_not_found = True
         for rpp_idx, rpp_date in enumerate(rpp_date_rides):
             if rpp_date == date_ride:
                 del self.rides_pp_[rpp_idx]
-        else:
+                b_not_found = False
+        if b_not_found:
             warnings.warn('No rides have been removed. No matching dates.')
 
         return self
