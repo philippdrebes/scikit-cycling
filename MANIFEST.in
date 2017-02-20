@@ -1,8 +1,1 @@
-include *.rst
-recursive-include doc *
-recursive-include examples *
-recursive-include skcycling *.c *.h *.pyx *.pxd *.pxi
 recursive-include skcycling/datasets *.fit
-include COPYING
-include AUTHORS.rst
-include README.rst
