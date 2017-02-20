@@ -1,1 +1,2 @@
-recursive-include skcycling/datasets *.fit
+include skcycling/datasets/data/*
+include skcycling/datasets/corrupted-data/*
