@@ -2,7 +2,7 @@
 
 import os
 import numpy as np
-import cPickle as pickle
+import pickle
 
 from scipy.interpolate import interp1d
 

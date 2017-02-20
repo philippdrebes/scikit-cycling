@@ -6,7 +6,7 @@ This module contains the class to manage the data linked to a single rider.
 import os
 import warnings
 import numpy as np
-import cPickle as pickle
+import pickle
 import logging
 from copy import deepcopy
 

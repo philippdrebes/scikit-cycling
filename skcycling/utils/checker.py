@@ -1,8 +1,8 @@
 """Helper function to check data conformity."""
 
 import os
-
 from datetime import date
+import six
 
 
 def check_filename_fit(filename):
@@ -21,7 +21,7 @@ def check_filename_fit(filename):
     """
 
     # Check that filename is of string type
-    if isinstance(filename, basestring):
+    if isinstance(filename, six.string_types):
         # Check that this is a fit file
         if filename.endswith('.fit'):
             # Check that the file is existing
