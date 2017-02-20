@@ -1,2 +1,2 @@
 include skcycling/datasets/data/*
-include skcycling/datasets/corrupted-data/*
+include skcycling/datasets/corrupted_data/*
