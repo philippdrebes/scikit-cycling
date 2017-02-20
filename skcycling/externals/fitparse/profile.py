@@ -3,7 +3,7 @@
 ####### EXPORTED PROFILE FROM SDK VERSION 13.0 AT 2014-11-09 16:44:30 ########
 ########### PARSED 64 TYPES (813 VALUES), 41 MESSAGES (519 FIELDS) ###########
 
-from fitparse.records import (
+from .records import (
     ComponentField,
     Field,
     FieldType,

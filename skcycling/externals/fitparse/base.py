@@ -11,7 +11,7 @@ from .profile import FIELD_TYPE_TIMESTAMP, MESSAGE_TYPES
 from .records import (DataMessage, FieldData, FieldDefinition,
                       DefinitionMessage, MessageHeader, BASE_TYPES,
                       BASE_TYPE_BYTE)
-from fitparse.utils import calc_crc, scrub_method_name
+from .utils import calc_crc, scrub_method_name
 
 
 class FitParseError(Exception):
