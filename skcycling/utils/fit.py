@@ -1,4 +1,5 @@
 """Methods to help for mathematical fitting."""
+from __future__ import division
 
 import numpy as np
 
@@ -28,7 +29,7 @@ def res_std_dev(model, estimate):
         raise ValueError('The model and estimate arrays should have'
                          ' the same size.')
 
-    return np.sqrt(np.sum((model - estimate)**2) / (float(model.size) - 2.))
+    return np.sqrt(np.sum((model - estimate) ** 2) / (model.size - 2))
 
 
 def r_squared(model, estimate):
@@ -57,12 +58,12 @@ def r_squared(model, estimate):
     model_mean = np.mean(model)
 
     # Compute the total sum of squares
-    ss_tot = np.sum((model - model_mean)**2)
+    ss_tot = np.sum((model - model_mean) ** 2)
 
     # Compute the sum of squares residual
-    ss_res = np.sum((model - estimate)**2)
+    ss_res = np.sum((model - estimate) ** 2)
 
-    return 1. - (ss_res / ss_tot)
+    return 1 - (ss_res / ss_tot)
 
 
 def log_linear_fitting(x, y, method='lsq'):
