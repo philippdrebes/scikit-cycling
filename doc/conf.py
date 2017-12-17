@@ -301,8 +301,8 @@ texinfo_documents = [
 
 # Config for sphinx_issues
 
-issues_uri = 'https://github.com/glemaitre/scikit-cycling/issues/{issue}'
-issues_github_path = 'glemaitre/scikit-cycling'
+issues_uri = 'https://github.com/scikit-cycling/scikit-cycling/issues/{issue}'
+issues_github_path = 'scikit-cycling/scikit-cycling'
 issues_user_uri = 'https://github.com/{user}'
 
 
@@ -325,6 +325,6 @@ def setup(app):
 
 # The following is used by sphinx.ext.linkcode to provide links to github
 linkcode_resolve = make_linkcode_resolve('skcycling',
-                                         u'https://github.com/glemaitre/'
+                                         u'https://github.com/scikit-cycling/'
                                          'scikit-cycling/blob/{revision}/'
                                          '{package}/{path}#L{lineno}')

@@ -1,29 +1,37 @@
 Scikit-cycling
 ==============
 
-[![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master) [![codecov](https://codecov.io/gh/glemaitre/scikit-cycling/branch/master/graph/badge.svg)](https://codecov.io/gh/glemaitre/scikit-cycling) [![Build Status](https://travis-ci.org/glemaitre/scikit-cycling.svg?branch=master)](https://travis-ci.org/glemaitre/scikit-cycling) [![Build status](https://ci.appveyor.com/api/projects/status/3o28wvxsjljv8w97?svg=true)](https://ci.appveyor.com/project/glemaitre/scikit-cycling)
+.. image:: https://travis-ci.org/scikit-cycling/scikit-cycling.svg?branch=master
+    :target: https://travis-ci.org/scikit-cycling/scikit-cycling
 
-Goal
-----
-
-This toolbox will aggregate some useful tools to read into power data acquired by cyclists.
+.. image:: https://readthedocs.org/projects/scikit-cycling/badge/?version=latest
+    :target: http://scikit-cycling.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Installation
 ------------
 
-### Dependencies
+Dependencies
+~~~~~~~~~~~~
 
-This package needs the following dependencies:
+Scikit-cycling requires:
 
-* Numpy,
-* Scipy.
+* scipy
+* numpy
+* six
+* fit-parse
+* joblib
 
-### Cloning
 
-You can clone this repository with the usual `git clone`.
+Installation
+~~~~~~~~~~~~
 
-### Installation
+You can install the package by cloning the source::
 
-```
-pip install .
-```
+  git clone https://github.com/scikit-cycling/scikit-cycling.git
+  cd scikit-cycling
+  pip install .
+
+This is also possible to directly install through pip::
+
+  pip install git+https://github.com/scikit-cycling/scikit-cycling.git
