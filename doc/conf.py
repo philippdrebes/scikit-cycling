@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# scikit-cycling documentation build configuration file, created by
+# imbalanced-learn documentation build configuration file, created by
 # sphinx-quickstart on Mon Jan 18 14:44:12 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -14,31 +14,17 @@
 
 import os
 import sys
-
+from six import u
 import sphinx_rtd_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
-
-# -- General configuration ---------------------------------------------------
-
-# Try to override the matplotlib configuration as early as possible
-try:
-    import gen_rst
-except:
-    pass
-# -- General configuration ------------------------------------------------
-
-
-# If extensions (or modules to document with autodoc) are in another
-# directory, add these directories to sys.path here. If the directory
-# is relative to the documentation root, use os.path.abspath to make it
-# absolute, like shown here.
 sys.path.insert(0, os.path.abspath('sphinxext'))
-
 from github_link import make_linkcode_resolve
+import sphinx_gallery
+
+# -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.0'
@@ -47,32 +33,23 @@ from github_link import make_linkcode_resolve
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx',
-    'sphinx.ext.todo', 'sphinx.ext.pngmath', 'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode', #'sphinx_gallery.gen_gallery',
-    'sphinx.ext.autosummary', 'numpydoc',
-    'sphinx_issues', 'sphinx.ext.linkcode'
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.linkcode',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.imgmath',
+    'numpydoc',
+    'sphinx_issues',
+    'sphinx_gallery.gen_gallery',
 ]
 
-autosummary_generate = True
+# this is needed for some reason...
+# see https://github.com/numpy/numpydoc/issues/69
+numpydoc_show_class_members = False
 
 autodoc_default_flags = ['members', 'inherited-members']
-
-# sphinx_gallery_conf = {
-#     # path to your examples scripts
-#     'examples_dirs': '../examples',
-#     # path where to save gallery generated examples
-#     'gallery_dirs': 'auto_examples',
-#     # to make references clickable
-#     'doc_module': 'skcycling',
-#     'reference_url': {
-#         'skcycling': None,
-#         'sklearn': 'http://scikit-learn.org/stable',
-#         'matplotlib': 'http://matplotlib.org',
-#         'numpy': 'http://docs.scipy.org/doc/numpy-1.11.0',
-#         'scipy': 'http://docs.scipy.org/doc/scipy-0.18.0/reference'
-#     }
-# }
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -86,22 +63,22 @@ source_suffix = '.rst'
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
-# Generate the plots for the gallery
+# Generate the plot for the gallery
 plot_gallery = True
 
 # The master toctree document.
 master_doc = 'index'
 
 # General information about the project.
-project = u'scikit-cycling'
-copyright = u'2016, G. Lemaitre, C. Lemaitre'
+project = u('scikit-cycling')
+copyright = u('2016 - 2017, G. Lemaitre, C. Lemaitre')
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-__version__ = '0.1.0.dev0'
+from skcycling import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
@@ -118,7 +95,7 @@ release = __version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', '_templates']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -156,7 +133,7 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {}
+# html_theme_options = {'prev_next_buttons_location': None}
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
@@ -248,8 +225,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'scikit-cycling.tex', u'scikit-cycling Documentation',
-     u'G. Lemaitre, C. Lemaitre', 'manual'),
+    ('index', 'scikit-cycling.tex', u('scikit-cycling Documentation'),
+     u('G. Lemaitre, C. Lemaitre'), 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -269,10 +246,28 @@ latex_documents = [
 # Documents to append as an appendix to all manuals.
 # latex_appendices = []
 
+# intersphinx configuration
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/{.major}'.format(
+        sys.version_info), None),
+    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
+    'matplotlib': ('https://matplotlib.org/', None),
+}
+
+# sphinx-gallery configuration
+sphinx_gallery_conf = {
+    'doc_module': 'skcycling',
+    'backreferences_dir': os.path.join('generated'),
+    'reference_url': {
+        'skcycling': None}
+}
+
+# -- Options for manual page output ---------------------------------------
+
 # If false, no module index is generated.
 # latex_domain_indices = True
 
-# -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
@@ -290,18 +285,18 @@ man_pages = [('index', 'scikit-cycling', u'scikit-cycling Documentation',
 texinfo_documents = [
     ('index', 'scikit-cycling', u'scikit-cycling Documentation',
      u'G. Lemaitre, C. Lemaitre', 'scikit-cycling',
-     'Toolbox for power analysis of cycling data.', 'Miscellaneous'),
+     'Toolbox for analysis of power cycling data.', 'Miscellaneous'),
 ]
 
 
-def generate_example_rst(app, what, name, obj, options, lines):
-    # generate empty examples files, so that we don't get
-    # inclusion errors if there are no examples for a class / module
-    examples_path = os.path.join(app.srcdir, "modules", "generated",
-                                 "%s.examples" % name)
-    if not os.path.exists(examples_path):
-        # touch file
-        open(examples_path, 'w').close()
+# def generate_example_rst(app, what, name, obj, options, lines):
+#     # generate empty examples files, so that we don't get
+#     # inclusion errors if there are no examples for a class / module
+#     examples_path = os.path.join(app.srcdir, "generated",
+#                                  "%s.examples" % name)
+#     if not os.path.exists(examples_path):
+#         # touch file
+#         open(examples_path, 'w').close()
 
 
 # Config for sphinx_issues
@@ -312,7 +307,8 @@ issues_user_uri = 'https://github.com/{user}'
 
 
 def setup(app):
-    app.connect('autodoc-process-docstring', generate_example_rst)
+    app.add_javascript('js/copybutton.js')
+    # app.connect('autodoc-process-docstring', generate_example_rst)
 
 
 # Documents to append as an appendix to all manuals.
@@ -326,9 +322,6 @@ def setup(app):
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
 
 # The following is used by sphinx.ext.linkcode to provide links to github
 linkcode_resolve = make_linkcode_resolve('skcycling',
