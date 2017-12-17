@@ -1,12 +1,12 @@
 """ Test the loading and saving using pickles. """
 
 import os
-
 from tempfile import mkdtemp
 import shutil
 
-from numpy.testing import assert_array_equal
-from numpy.testing import assert_equal
+import pytest
+
+from numpy.testing import assert_allclose
 
 from skcycling.datasets import load_toy
 from skcycling.data_management import Rider
@@ -33,9 +33,9 @@ def test_save_load_rider():
         rider.save_to_pickles(filename)
         obj = rider.load_from_pickles(filename)
 
-        assert_array_equal(rider.rides_pp_[0].data_, obj.rides_pp_[0].data_)
-        assert_array_equal(rider.record_pp_.data_, obj.record_pp_.data_)
-        assert_equal(rider.max_duration_profile, obj.max_duration_profile)
-        assert_equal(rider.cyclist_weight, obj.cyclist_weight)
+        assert_allclose(rider.rides_pp_[0].data_, obj.rides_pp_[0].data_)
+        assert_allclose(rider.record_pp_.data_, obj.record_pp_.data_)
+        assert rider.max_duration_profile == obj.max_duration_profile
+        assert rider.cyclist_weight == pytest.approx(obj.cyclist_weight)
     finally:
         shutil.rmtree(tmp_dir)

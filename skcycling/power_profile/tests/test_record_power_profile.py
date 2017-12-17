@@ -2,10 +2,10 @@
 from itertools import product
 from datetime import date
 
+import pytest
+
 import numpy as np
 from numpy.testing import assert_allclose
-from numpy.testing import assert_equal
-from numpy.testing import assert_raises
 
 from skcycling.datasets import load_toy
 from skcycling.power_profile import RidePowerProfile
@@ -39,11 +39,11 @@ def test_record_pp_fit():
     ])
 
     assert_allclose(record_pp.data_, data)
-    assert_equal(record_pp.data_norm_, None)
-    assert_equal(record_pp.max_duration_profile, 1)
-    assert_equal(record_pp.cyclist_weight, None)
-    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
-                                           date(2014, 7, 26)))
+    assert record_pp.data_norm_ is None
+    assert record_pp.max_duration_profile == 1
+    assert record_pp.cyclist_weight is None
+    assert record_pp.date_profile_ == (date(2014, 5, 7),
+                                       date(2014, 7, 26))
 
 
 def test_record_pp_fit_w_weight():
@@ -73,11 +73,11 @@ def test_record_pp_fit_w_weight():
     ])
 
     assert_allclose(record_pp.data_, data)
-    assert_allclose(record_pp.data_norm_, data / 60.)
-    assert_equal(record_pp.max_duration_profile, 1)
-    assert_allclose(record_pp.cyclist_weight, 60.)
-    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
-                                           date(2014, 7, 26)))
+    assert record_pp.data_norm_ == pytest.approx(data / 60.)
+    assert record_pp.max_duration_profile == 1
+    assert record_pp.cyclist_weight == pytest.approx(60.)
+    assert record_pp.date_profile_ == (date(2014, 5, 7),
+                                       date(2014, 7, 26))
 
 
 def test_record_pp_fit_date():
@@ -108,16 +108,17 @@ def test_record_pp_fit_date():
     ])
 
     assert_allclose(record_pp.data_, data)
-    assert_allclose(record_pp.data_norm_, data / 60.)
-    assert_equal(record_pp.max_duration_profile, 1)
-    assert_allclose(record_pp.cyclist_weight, 60.)
-    assert_equal(record_pp.date_profile_, (date(2014, 5, 7),
-                                           date(2014, 5, 11)))
+    assert record_pp.data_norm_ == pytest.approx(data / 60.)
+    assert record_pp.max_duration_profile == 1
+    assert record_pp.cyclist_weight == pytest.approx(60.)
+    assert record_pp.date_profile_ == (date(2014, 5, 7),
+                                       date(2014, 5, 11))
 
 
 def test_record_pp_fit_wrong_pp_type():
     record_pp = RecordPowerProfile(max_duration_profile=1, cyclist_weight=60.)
-    assert_raises(ValueError, record_pp.fit, 1)
+    with pytest.raises(ValueError):
+        record_pp.fit(1)
 
 
 def test_record_pp_fit_wrong_pp_list_type():
@@ -134,10 +135,17 @@ def test_record_pp_fit_wrong_pp_list_type():
     ride_pp_list[0].fit(filename[0])
     ride_pp_list.insert(1, 1)
     record_pp = RecordPowerProfile(max_duration_profile=1, cyclist_weight=60.)
-    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+    with pytest.raises(ValueError):
+        record_pp.fit(ride_pp_list)
 
 
-def test_record_pp_fit_date_wrong_tuple():
+@pytest.mark.parametrize(
+    "date_profile",
+    [([1, 1]),
+     ((1, 2, 3)),
+     ((1, 2)),
+     ((date(2014, 1, 2), date(2014, 1, 1)))])
+def test_record_pp_fit_date_wrong_tuple(date_profile):
     pattern = ['2014-05-07-14-26-22.fit', '2014-05-11-11-39-38.fit']
     filename_list = load_toy()
     filename = []
@@ -152,15 +160,8 @@ def test_record_pp_fit_date_wrong_tuple():
     for ride, f in zip(ride_pp_list, filename):
         ride.fit(f)
     record_pp = RecordPowerProfile(max_duration_profile=1, cyclist_weight=60.)
-    assert_raises(ValueError, record_pp.fit, ride_pp_list, date_profile=[1, 1])
-    assert_raises(
-        ValueError, record_pp.fit, ride_pp_list, date_profile=(1, 2, 3))
-    assert_raises(ValueError, record_pp.fit, ride_pp_list, date_profile=(1, 2))
-    assert_raises(
-        ValueError,
-        record_pp.fit,
-        ride_pp_list,
-        date_profile=(date(2014, 1, 2), date(2014, 1, 1)))
+    with pytest.raises(ValueError):
+        record_pp.fit(ride_pp_list, date_profile=date_profile)
 
 
 def test_record_pp_fit_forget_fitting():
@@ -170,7 +171,8 @@ def test_record_pp_fit_forget_fitting():
         for i in range(len(filename_list))
     ]
     record_pp = RecordPowerProfile(max_duration_profile=1)
-    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+    with pytest.raises(ValueError):
+        record_pp.fit(ride_pp_list)
 
 
 def test_record_pp_fit_no_max_profile():
@@ -182,7 +184,8 @@ def test_record_pp_fit_no_max_profile():
     for ride, filename in zip(ride_pp_list, filename_list):
         ride.fit(filename)
     record_pp = RecordPowerProfile(max_duration_profile=None)
-    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+    with pytest.raises(ValueError):
+        record_pp.fit(ride_pp_list)
 
 
 def test_record_pp_fit_different_max_duration():
@@ -194,11 +197,13 @@ def test_record_pp_fit_different_max_duration():
     for ride, filename in zip(ride_pp_list, filename_list):
         ride.fit(filename)
     record_pp = RecordPowerProfile(max_duration_profile=1)
-    assert_raises(ValueError, record_pp.fit, ride_pp_list)
+    with pytest.raises(ValueError):
+        record_pp.fit(ride_pp_list)
 
 
 def test_mmp_wrong_type():
-    assert_raises(ValueError, maximal_mean_power, 1)
+    with pytest.raises(ValueError):
+        maximal_mean_power(1)
     filename_list = load_toy()
     ride_pp_list = [
         RidePowerProfile(max_duration_profile=i+1)
@@ -207,4 +212,5 @@ def test_mmp_wrong_type():
     for ride, filename in zip(ride_pp_list, filename_list):
         ride.fit(filename)
     ride_pp_list.append(1)
-    assert_raises(ValueError, maximal_mean_power, ride_pp_list)
+    with pytest.raises(ValueError):
+        maximal_mean_power(ride_pp_list)

@@ -4,8 +4,9 @@ import os
 import shutil
 from tempfile import mkdtemp
 
-from numpy.testing import assert_array_equal
-from numpy.testing import assert_equal
+import pytest
+
+from numpy.testing import assert_allclose
 
 from skcycling.datasets import load_toy
 from skcycling.power_profile import RidePowerProfile
@@ -22,12 +23,11 @@ def test_save_load_ride_pp():
         my_ride_rpp.save_to_pickles(store_filename)
         obj = RidePowerProfile.load_from_pickles(store_filename)
 
-        assert_array_equal(my_ride_rpp.data_, obj.data_)
-        assert_equal(my_ride_rpp.data_norm_, obj.data_norm_)
-        assert_equal(my_ride_rpp.cyclist_weight, obj.cyclist_weight)
-        assert_equal(my_ride_rpp.max_duration_profile,
-                     obj.max_duration_profile)
-        assert_equal(my_ride_rpp.date_profile_, obj.date_profile_)
-        assert_equal(my_ride_rpp.filename_, obj.filename_)
+        assert_allclose(my_ride_rpp.data_, obj.data_)
+        assert_allclose(my_ride_rpp.data_norm_, obj.data_norm_)
+        assert my_ride_rpp.cyclist_weight == pytest.approx(obj.cyclist_weight)
+        assert my_ride_rpp.max_duration_profile == obj.max_duration_profile
+        assert my_ride_rpp.date_profile_ == obj.date_profile_
+        assert my_ride_rpp.filename_ == obj.filename_
     finally:
         shutil.rmtree(tmp_dir)

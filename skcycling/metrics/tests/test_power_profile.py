@@ -1,24 +1,18 @@
 """Test the metrics linked to the power profile."""
 
-import unittest
-import numpy as np
 from copy import deepcopy
 
-from numpy.testing import assert_raises
+import pytest
+
+import numpy as np
+
 from numpy.testing import assert_allclose
 from numpy.testing import assert_warns
 
 from skcycling.datasets import load_toy
 from skcycling.data_management import Rider
-
 from skcycling.metrics import aerobic_meta_model
 
-_dummy = _dummy = unittest.TestCase('__init__')
-try:
-    assert_raises_regex = _dummy.assertRaisesRegex
-except AttributeError:
-    # Python 2.7
-    assert_raises_regex = _dummy.assertRaisesRegexp
 
 # create one rider profile
 FILENAME_LIST = load_toy()
@@ -3646,17 +3640,15 @@ RIDE_PP = np.array([
 
 
 def test_amm_wrong_profile():
-    assert_raises_regex(ValueError, "The variable profile need to be of"
-                        " type RecordPowerProfile or RidePowerProfile.",
-                        aerobic_meta_model, 1)
+    msg = ("The variable profile need to be of type RecordPowerProfile"
+           " or RidePowerProfile.")
+    with pytest.raises(ValueError, message=msg):
+        aerobic_meta_model(1)
 
 
 def test_amm_wrong_method():
-    assert_raises(
-        NotImplementedError,
-        aerobic_meta_model,
-        rider.rides_pp_[0],
-        method='None')
+    with pytest.raises(NotImplementedError):
+        aerobic_meta_model(rider.rides_pp_[0], method='None')
 
 
 def test_amm_no_normalized():
@@ -3664,13 +3656,10 @@ def test_amm_no_normalized():
     ride_rpp = deepcopy(rider.rides_pp_[0])
     ride_rpp.data_norm_ = None
     ride_rpp.cyclist_weight = None
-    assert_raises_regex(
-        ValueError,
-        "You cannot get a normalized rpp if"
-        " the cyclist weight never has been given.",
-        aerobic_meta_model,
-        ride_rpp,
-        normalized=True)
+    msg = ("You cannot get a normalized rpp if the cyclist weight never"
+           " has been given.")
+    with pytest.raises(ValueError, message=msg):
+        aerobic_meta_model(ride_rpp, normalized=True)
 
 
 def test_amm_default_params():
@@ -3682,9 +3671,9 @@ def test_amm_default_params():
     pma, t_pma, aei, _, _ = aerobic_meta_model(ride_rpp)
 
     # Check the different value
-    assert_allclose(pma, 453.37229888268155)
-    assert_allclose(t_pma, 3.)
-    assert_allclose(aei, -11.487957337374663)
+    assert pma == pytest.approx(453.37229888268155)
+    assert t_pma == pytest.approx(3.)
+    assert aei == pytest.approx(-11.487957337374663)
 
 
 def test_aerobic_meta_model_ts():
@@ -3697,9 +3686,9 @@ def test_aerobic_meta_model_ts():
     pma, t_pma, aei, _, _ = aerobic_meta_model(ride_rpp, ts=ts_reg)
 
     # Check the different value
-    assert_allclose(pma, 453.37229888268155)
-    assert_allclose(t_pma, 3.)
-    assert_allclose(aei, -11.497339815062894)
+    assert pma == pytest.approx(453.37229888268155)
+    assert t_pma == pytest.approx(3.)
+    assert aei == pytest.approx(-11.497339815062894)
 
 
 def test_aerobic_meta_model_weight():
@@ -3711,9 +3700,9 @@ def test_aerobic_meta_model_weight():
     pma, t_pma, aei, _, _ = aerobic_meta_model(ride_rpp, normalized=True)
 
     # Check the different value
-    assert_allclose(pma, 7.5562049813780261)
-    assert_allclose(t_pma, 3.)
-    assert_allclose(aei, -11.487957337374663)
+    assert pma == pytest.approx(7.5562049813780261)
+    assert t_pma == pytest.approx(3.)
+    assert aei == pytest.approx(-11.487957337374663)
 
 
 def test_aerobic_meta_model_lm():
@@ -3725,9 +3714,9 @@ def test_aerobic_meta_model_lm():
     pma, t_pma, aei, _, _ = aerobic_meta_model(ride_rpp, method='lm')
 
     # Check the different value
-    assert_allclose(pma, 453.37229888268155)
-    assert_allclose(t_pma, 3.)
-    assert_allclose(aei, -11.487957337374663)
+    assert pma == pytest.approx(453.37229888268155)
+    assert t_pma == pytest.approx(3.)
+    assert aei == pytest.approx(-11.487957337374663)
 
 
 def test_aerobic_meta_model_no_conf():
@@ -3735,7 +3724,8 @@ def test_aerobic_meta_model_no_conf():
     ride_rpp.data_ = RIDE_PP.copy()[600:]
     ride_rpp.data_norm_ = ride_rpp.data_ / ride_rpp.cyclist_weight
     ride_rpp.max_duration_profile = 10.
-    assert_raises(ValueError, aerobic_meta_model, ride_rpp)
+    with pytest.raises(ValueError):
+        aerobic_meta_model(ride_rpp)
 
 
 def test_amm_cropping_ts():
@@ -3750,6 +3740,6 @@ def test_amm_cropping_ts():
     pma, t_pma, aei, _, _ = aerobic_meta_model(ride_rpp, ts=ts_reg)
 
     # Check the different value
-    assert_allclose(pma, 453.37229888268155)
-    assert_allclose(t_pma, 3.)
-    assert_allclose(aei, -11.497209681240594)
+    assert pma == pytest.approx(453.37229888268155)
+    assert t_pma == pytest.approx(3.)
+    assert aei == pytest.approx(-11.497209681240594)

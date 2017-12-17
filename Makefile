@@ -1,9 +1,4 @@
 .PHONY: all clean test
-PYTHON=python
-NOSETESTS=nosetests
-
-all:
-	$(PYTHON) setup.py build_ext --inplace
 
 clean:
 	find . -name "*.so" -o -name "*.pyc" -o -name "*.md5" -o -name "*.pyd" -o -name "*~" | xargs rm -f
@@ -11,16 +6,27 @@ clean:
 	rm -rf coverage
 	rm -rf dist
 	rm -rf build
+	rm -rf doc/_build
+	rm -rf doc/auto_examples
+	rm -rf doc/generated
+	rm -rf doc/modules
+	rm -rf examples/.ipynb_checkpoints
 
-test:
-	$(NOSETESTS) -s -v skcycling
+test-code:
+	pytest skcycling
 
-# doctest:
-# 	$(PYTHON) -c "import skcycling, sys, io; sys.exit(skcycling.doctest_verbose())"
+test-doc:
+	pytest doc/*.rst
 
-coverage:
-	$(NOSETESTS) skcycling -s -v --with-coverage --cover-package=skcycling
+test-coverage:
+	rm -rf coverage .coverage
+	pytest --cov=skcycling skcycling
+
+test: test-coverage test-doc
 
 html:
-	conda install -y sphinx sphinx_rtd_theme numpydoc
 	export SPHINXOPTS=-W; make -C doc html
+
+code-analysis:
+	flake8 skcycling | grep -v __init__
+	pylint -E skcycling/ -d E1103,E0611,E1101

@@ -1,9 +1,5 @@
 from skcycling.datasets import load_toy
 
-import unittest
-_dummy = unittest.TestCase('__init__')
-assert_true = _dummy.assertTrue
-
 
 def test_load_toy_list_file():
     filenames = load_toy()
@@ -12,13 +8,13 @@ def test_load_toy_list_file():
         '2014-07-26-18-50-56.fit'
     ])
     for f, gt in zip(filenames, gt_filenames):
-        assert_true(gt in f)
+        assert gt in f
 
 
 def test_load_toy_path():
     path = load_toy(returned_type='path')
     gt_path = 'data'
-    assert_true(gt_path in path)
+    assert gt_path in path
 
 
 def test_load_toy_list_file_corrupted():
@@ -28,11 +24,11 @@ def test_load_toy_list_file_corrupted():
         '2015-11-27-18-54-57.fit'
     ])
     for f, gt in zip(filenames, gt_filenames):
-        assert_true(gt in f)
+        assert gt in f
 
 
 def test_load_toy_path_corrupted():
     path = load_toy(returned_type='path', set_data='corrupted')
     print(path)
     gt_path = 'corrupted_data'
-    assert_true(gt_path in path)
+    assert gt_path in path

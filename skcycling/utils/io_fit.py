@@ -3,7 +3,7 @@
 import warnings
 import numpy as np
 
-from ..externals.fitparse import FitFile
+from fitparse import FitFile
 
 from .checker import check_filename_fit
 from ..restoration import outliers_rejection

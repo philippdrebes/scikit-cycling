@@ -1,10 +1,12 @@
 """Test the Ride Power Profile class. """
+
+import pytest
+
 import numpy as np
 
 from datetime import date
 
 from numpy.testing import assert_allclose
-from numpy.testing import assert_equal
 
 from skcycling.datasets import load_toy
 from skcycling.power_profile import RidePowerProfile
@@ -30,11 +32,11 @@ def test_ridepp_fit():
         296.48275862, 296.30508475
     ])
     assert_allclose(ride_rpp.data_, data)
-    assert_equal(ride_rpp.data_norm_, None)
-    assert_equal(ride_rpp.cyclist_weight, None)
-    assert_equal(ride_rpp.max_duration_profile, 1)
-    assert_equal(ride_rpp.date_profile_, date(2014, 5, 7))
-    assert_equal(ride_rpp.filename_, filename)
+    assert ride_rpp.data_norm_ is None
+    assert ride_rpp.cyclist_weight is None
+    assert ride_rpp.max_duration_profile == 1
+    assert ride_rpp.date_profile_ == date(2014, 5, 7)
+    assert ride_rpp.filename_ == filename
 
 
 def test_ridepp_fit_w_weight():
@@ -55,11 +57,11 @@ def test_ridepp_fit_w_weight():
         296.48275862, 296.30508475
     ])
     assert_allclose(ride_rpp.data_, data)
-    assert_allclose(ride_rpp.data_norm_, data / 60.)
-    assert_allclose(ride_rpp.cyclist_weight, 60.)
-    assert_equal(ride_rpp.max_duration_profile, 1)
-    assert_equal(ride_rpp.date_profile_, date(2014, 5, 7))
-    assert_equal(ride_rpp.filename_, filename)
+    assert ride_rpp.data_norm_ == pytest.approx(data / 60.)
+    assert ride_rpp.cyclist_weight == pytest.approx(60.)
+    assert ride_rpp.max_duration_profile == 1
+    assert ride_rpp.date_profile_ == date(2014, 5, 7)
+    assert ride_rpp.filename_ == filename
 
 
 def test_rpp_parallel():
@@ -70,4 +72,4 @@ def test_rpp_parallel():
             filename = f
     power_rec = load_power_from_fit(filename)
     val = _rpp_parallel(power_rec, 1)
-    assert_allclose(val, 500.)
+    assert val == pytest.approx(500.)

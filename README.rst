@@ -1,11 +1,7 @@
 Scikit-cycling
-=========
+==============
 
 [![Code Health](https://landscape.io/github/glemaitre/scikit-cycling/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/scikit-cycling/master) [![codecov](https://codecov.io/gh/glemaitre/scikit-cycling/branch/master/graph/badge.svg)](https://codecov.io/gh/glemaitre/scikit-cycling) [![Build Status](https://travis-ci.org/glemaitre/scikit-cycling.svg?branch=master)](https://travis-ci.org/glemaitre/scikit-cycling) [![Build status](https://ci.appveyor.com/api/projects/status/3o28wvxsjljv8w97?svg=true)](https://ci.appveyor.com/project/glemaitre/scikit-cycling)
-
-#### Manifesto
-
-Because *Human* is **perfectible** and **error-prone**, because *Science* should be **open** and **flow** and because *cogito ergo sum*.
 
 Goal
 ----
@@ -29,5 +25,5 @@ You can clone this repository with the usual `git clone`.
 ### Installation
 
 ```
-python setup.py install
+pip install .
 ```

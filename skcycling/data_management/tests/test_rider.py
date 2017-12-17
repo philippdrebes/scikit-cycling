@@ -1,10 +1,8 @@
 """ Test the rider class. """
-import numpy as np
-import unittest
 
-from numpy.testing import assert_equal
-from numpy.testing import assert_raises
-from numpy.testing import assert_array_equal
+import pytest
+import numpy as np
+
 from numpy.testing import assert_allclose
 from numpy.testing import assert_warns
 
@@ -14,19 +12,12 @@ from skcycling.datasets import load_toy
 from skcycling.data_management import Rider
 from skcycling.power_profile import RidePowerProfile
 
-_dummy = _dummy = unittest.TestCase('__init__')
-try:
-    assert_raises_regex = _dummy.assertRaisesRegex
-except AttributeError:
-    # Python 2.7
-    assert_raises_regex = _dummy.assertRaisesRegexp
-
 
 def test_rider_init_empty():
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
-    assert_equal(rider.cyclist_weight, 60.)
-    assert_equal(rider.max_duration_profile, 1)
-    assert_equal(rider.rides_pp_, [])
+    assert rider.cyclist_weight == pytest.approx(60.)
+    assert rider.max_duration_profile == 1
+    assert rider.rides_pp_ == []
 
 
 def test_rider_init_rides():
@@ -41,17 +32,13 @@ def test_rider_init_rides():
 
     rider = Rider(
         cyclist_weight=60., max_duration_profile=1, rides_pp=ride_pp_list)
-    assert_equal(rider.cyclist_weight, 60.)
-    assert_equal(rider.max_duration_profile, 1)
+    assert rider.cyclist_weight == pytest.approx(60.)
+    assert rider.max_duration_profile == 1
 
 
 def test_rider_init_rides_wrong_type():
-    assert_raises(
-        ValueError,
-        Rider,
-        cyclist_weight=60.,
-        max_duration_profile=1,
-        rides_pp=1)
+    with pytest.raises(ValueError):
+        Rider(cyclist_weight=60., max_duration_profile=1, rides_pp=1)
 
 
 def test_rider_init_rides_wrong_type_in_list():
@@ -66,14 +53,10 @@ def test_rider_init_rides_wrong_type_in_list():
     # Add something random
     ride_pp_list.append(1)
 
-    assert_raises_regex(
-        ValueError,
-        "The object in the list need"
-        " to be from the type RidePowerProfile",
-        Rider,
-        cyclist_weight=60.,
-        max_duration_profile=1,
-        rides_pp=ride_pp_list)
+    msg = "The object in the list need to be from the type RidePowerProfile"
+    with pytest.raises(ValueError, message=msg):
+        Rider(cyclist_weight=60., max_duration_profile=1,
+              rides_pp=ride_pp_list)
 
 
 def test_rider_init_rides_not_init():
@@ -83,14 +66,11 @@ def test_rider_init_rides_not_init():
         for i in range(len(filename_list))
     ]
 
-    assert_raises_regex(
-        ValueError,
-        "One of the ride never has been fitted."
-        " Fit before to compute the record rpp.",
-        Rider,
-        cyclist_weight=60.,
-        max_duration_profile=1,
-        rides_pp=ride_pp_list)
+    msg = ("One of the ride never has been fitted. Fit before to compute"
+           " the record rpp.")
+    with pytest.raises(ValueError, message=msg):
+        Rider(cyclist_weight=60., max_duration_profile=1,
+              rides_pp=ride_pp_list)
 
 
 def test_rider_init_rides_wrong_duration():
@@ -103,21 +83,18 @@ def test_rider_init_rides_wrong_duration():
     for ride, filename in zip(ride_pp_list, filename_list):
         ride.fit(filename)
 
-    assert_raises_regex(
-        ValueError,
-        "The maximum duration of the profile"
-        " should be the same for all the data",
-        Rider,
-        cyclist_weight=60.,
-        max_duration_profile=1,
-        rides_pp=ride_pp_list)
+    msg = ("The maximum duration of the profile should be the same for all"
+           " the data")
+    with pytest.raises(ValueError, message=msg):
+        Rider(cyclist_weight=60., max_duration_profile=1,
+              rides_pp=ride_pp_list)
 
 
 def test_rider_add_rides_path_not_exist():
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
-
-    assert_raises_regex(ValueError, "The path is not existing.",
-                        rider.add_rides, 'random')
+    msg = "The path is not extisting."
+    with pytest.raises(ValueError, message=msg):
+        rider.add_rides('random')
 
 
 def test_rider_add_rides_path():
@@ -141,7 +118,7 @@ def test_rider_add_rides_path():
 
     # Check the consistency between the two riders
     for r1, r2 in zip(rider.rides_pp_, rider2.rides_pp_):
-        assert_array_equal(r1.data_, r2.data_)
+        assert_allclose(r1.data_, r2.data_)
 
 
 def test_rider_add_rides_path_overwrite():
@@ -154,11 +131,11 @@ def test_rider_add_rides_path_overwrite():
         ride.fit(filename)
     rider = Rider(
         cyclist_weight=60., max_duration_profile=1, rides_pp=ride_pp_list)
-    assert_equal(len(rider.rides_pp_), 2)
+    assert len(rider.rides_pp_) == 2
 
     path_fit = load_toy(returned_type='path')
     rider.add_rides(path_fit, overwrite=True)
-    assert_equal(len(rider.rides_pp_), 3)
+    assert len(rider.rides_pp_) == 3
 
 
 def test_rider_add_ride_fit():
@@ -177,15 +154,17 @@ def test_rider_add_ride_fit():
         ride.fit(filename)
     rider2 = Rider(
         cyclist_weight=60., max_duration_profile=1, rides_pp=ride_pp_list)
-    assert_array_equal(rider.rides_pp_[0].data_, rider2.rides_pp_[0].data_)
+    assert_allclose(rider.rides_pp_[0].data_, rider2.rides_pp_[0].data_)
 
 
 def test_rider_delete_ride_no_date():
     filename = load_toy()[0]
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
     rider.add_rides(filename)
-    assert_raises_regex(ValueError, "The date should be a date object",
-                        rider.delete_ride, '2014, 5, 11')
+
+    msg = "The date should be a date object"
+    with pytest.raises(ValueError, message=msg):
+        rider.delete_ride('2014, 5, 11')
 
 
 def test_rider_delete_ride():
@@ -193,7 +172,7 @@ def test_rider_delete_ride():
     rider = Rider(cyclist_weight=60., max_duration_profile=1)
     rider.add_rides(filename)
     rider.delete_ride(date(2014, 5, 7))
-    assert_equal(len(rider.rides_pp_), 0)
+    assert len(rider.rides_pp_) == 0
 
 
 def test_rider_delete_ride_warning_nothing():
@@ -202,7 +181,7 @@ def test_rider_delete_ride_warning_nothing():
     rider.add_rides(filename)
     rider.delete_ride(date(2014, 5, 7))
     assert_warns(UserWarning, rider.delete_ride, date(2014, 5, 7))
-    assert_equal(len(rider.rides_pp_), 0)
+    assert len(rider.rides_pp_) == 0
 
 
 def test_compute_record_pp():

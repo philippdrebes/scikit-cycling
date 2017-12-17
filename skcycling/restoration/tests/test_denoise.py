@@ -1,17 +1,11 @@
-import unittest
+import pytest
+
 import numpy as np
 
 from numpy.testing import assert_allclose
 
 from skcycling.restoration import outliers_rejection
 from skcycling.restoration import moving_average
-
-_dummy = _dummy = unittest.TestCase('__init__')
-try:
-    assert_raises_regex = _dummy.assertRaisesRegex
-except AttributeError:
-    # Python 2.7
-    assert_raises_regex = _dummy.assertRaisesRegexp
 
 pow_ride_1 = np.linspace(-10., 3000., 20)
 pow_ride_2 = np.array([200.] * 4 + [300] * 4)
@@ -32,8 +26,9 @@ def test_outliers_thres_rejection():
 
 
 def test_outliers_unknown_method():
-    assert_raises_regex(ValueError, "The outliers detection method is"
-                        " unknown.", outliers_rejection, pow_ride_1, '')
+    msg = "The outliers detection method is unknown."
+    with pytest.raises(ValueError, message=msg):
+        outliers_rejection(pow_ride_1, '')
 
 
 def test_moving_average():
