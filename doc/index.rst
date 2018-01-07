@@ -18,9 +18,16 @@ Contents:
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: API Documentation
+   :caption: Documentation
 
    api
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Tutorial - Examples
+
+   auto_examples/index
 
 .. toctree::
    :maxdepth: 1
@@ -42,20 +49,18 @@ The exact API of all functions and classes, as given in the
 doctring. The API documents expected types and allowed features for
 all functions, and all parameters available for the algorithms.
 
+`Examples <auto_examples/index.html>`_
+--------------------------------------
+
+A set of examples illustrating the use of the different algorithms. It
+complements the `User Guide <user_guide.html>`_.
+
 `What's new <whats_new.html>`_
 ------------------------------
 
 Log of the scikit-cycling history.
 
-`About imbalanced-learn <about.html>`_
+`About scikit-cycling <about.html>`_
 --------------------------------------
 
 Just to know about history of scikit-cycling.
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

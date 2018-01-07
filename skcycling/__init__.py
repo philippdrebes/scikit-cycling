@@ -5,26 +5,17 @@ analyse file extracted from powermeters.
 
 Subpackages
 -----------
-data_management
-    Class to manage the data for a rider.
 datasets
     Modules with helper for datasets.
 metrics
     Metrics to quantify cyclist ride.
 power_profile
     Record power-profile of cyclist.
-restoration
-    Utility for denoising cyclist ride.
 utils
     Utility to read and save cycling ride.
 """
 
 from ._version import __version__
 
-__all__ = ['data_management',
-           'datasets',
-           'metrics',
-           'power_profile',
-           'restoration',
-           'utils',
-           '__version__']
+from . import __check_build
+from .base import Rider
