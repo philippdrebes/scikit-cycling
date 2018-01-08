@@ -57,8 +57,8 @@ def test_load_power_if_no_record():
     for f in filenames:
         if pattern in f:
             filename = f
-    msg = "There is no data to treat in that file."
-    with pytest.raises(ValueError, message=msg):
+    msg = "does not contain any data."
+    with pytest.raises(IOError, message=msg):
         load_power_from_fit(filename)
 
 

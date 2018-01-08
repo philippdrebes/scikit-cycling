@@ -5,10 +5,17 @@
 # License: BSD 3 clause
 
 import os
+from collections import defaultdict
+
 import pandas as pd
+import numpy as np
 import six
 
 from fitparse import FitFile
+
+# 'timestamp' will be consider as the index of the DataFrame later on
+FIELDS_DATA = ('timestamp', 'power', 'heart-rate', 'cadence', 'distance',
+               'elevation')
 
 
 def check_filename_fit(filename):
@@ -52,7 +59,7 @@ def load_power_from_fit(filename):
 
     Returns
     -------
-    power_rec : ndarray, shape (n_samples)
+    data : DataFrame
         Power records of the ride.
 
     """
@@ -61,8 +68,17 @@ def load_power_from_fit(filename):
     activity.parse()
     records = activity.get_messages(name='record')
 
-    power, timestamp = zip(*[
-        (rec.get_value('power'), rec.get_value('timestamp'))
-        for rec in records])
+    data = defaultdict(list)
+    for rec in records:
+        values = rec.get_values()
+        for key in FIELDS_DATA:
+            data[key].append(values.get(key, np.NaN))
 
-    return pd.DataFrame({'power': power}, index=timestamp)
+    data = pd.DataFrame(data)
+    if data.empty:
+        raise IOError('The file {} does not contain any data.'.format(
+            filename))
+    data.set_index(FIELDS_DATA[0], inplace=True)
+    del data.index.name
+
+    return data

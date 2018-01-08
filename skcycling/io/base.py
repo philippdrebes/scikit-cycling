@@ -8,14 +8,20 @@ import numpy as np
 
 from .fit import load_power_from_fit
 
+DROP_OPTIONS = ('columns', 'rows', 'both')
 
-def bikeread(filename):
+
+def bikeread(filename, drop_nan=None):
     """Read power data file.
 
     Parameters
     ----------
     filename : str
         Path to the file to read.
+
+    drop_nan : str {'columns', 'rows', 'both'} or None
+        Either to remove the columns/rows containing NaN values. By default,
+        all data will be kept.
 
     Returns
     -------
@@ -26,17 +32,28 @@ def bikeread(filename):
     --------
     >>> from skcycling.datasets import load_fit
     >>> from skcycling.io import bikeread
-    >>> activity = bikeread(load_fit()[0])
+    >>> activity = bikeread(load_fit()[0], drop_nan='columns')
     >>> activity.head() # doctest : +NORMALIZE_WHITESPACE
-                         power
-    2014-05-07 12:26:22  256.0
-    2014-05-07 12:26:23  185.0
-    2014-05-07 12:26:24  343.0
-    2014-05-07 12:26:25  344.0
-    2014-05-07 12:26:26  389.0
-
+                         cadence  distance  power
+    2014-05-07 12:26:22     45.0      3.05  256.0
+    2014-05-07 12:26:23     42.0      6.09  185.0
+    2014-05-07 12:26:24     44.0      9.09  343.0
+    2014-05-07 12:26:25     45.0     11.94  344.0
+    2014-05-07 12:26:26     48.0     15.03  389.0
     """
+    if drop_nan is not None and drop_nan not in DROP_OPTIONS:
+        raise ValueError('"drop_nan" should be one of {}.'
+                         ' Got {} instead.'.format(DROP_OPTIONS, drop_nan))
+
     df = load_power_from_fit(filename)
+
+    if drop_nan is not None:
+        if drop_nan == 'columns':
+            df.dropna(axis=1, inplace=True)
+        elif drop_nan == 'rows':
+            df.dropna(axis=0, inplace=True)
+        else:
+            df.dropna(axis=1, inplace=True).dropna(axis=0, inplace=True)
 
     # remove possible outliers by clipping the value
     df[df['power'] > 2500.] = np.nan
