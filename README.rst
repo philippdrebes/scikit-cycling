@@ -21,9 +21,11 @@ Scikit-cycling requires:
 
 * scipy
 * numpy
+* pandas
 * six
 * fit-parse
 * joblib
+* scikit-learn
 
 
 Installation
