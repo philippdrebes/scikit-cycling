@@ -24,11 +24,13 @@ print(__doc__)
 # rider.add_activities(load_fit())
 rider = Rider.from_csv(load_rider())
 
-rider.power_profile_.plot()
+rider.power_profile_.loc['power'].plot()
 plt.xlabel('Time')
 plt.ylabel('Power (W)')
 
-rider.record_power_profile().plot(alpha=0.5, style='--', legend=True)
+rider.record_power_profile()['power'].plot(alpha=0.5,
+                                           style='--',
+                                           legend=True)
 plt.xlabel('Time')
 plt.ylabel('Power (W)')
 
