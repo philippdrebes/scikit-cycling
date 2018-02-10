@@ -4,14 +4,17 @@
 #          Cedric Lemaitre
 # License: BSD 3 clause
 
+from collections import defaultdict
 from datetime import time, timedelta
 from numbers import Integral
 
+import numpy as np
 import pandas as pd
 import six
 from joblib import Parallel, delayed
 
 from ._power_profile import max_mean_power_interval
+from ._power_profile import _associated_data_power_profile
 
 
 def _int2time(secs):
@@ -50,23 +53,20 @@ def _time2int(dt):
     return dt.hour * 3600 + dt.minute * 60 + dt.second
 
 
-def activity_power_profile(activity, max_duration=None, n_jobs=1):
+def activity_power_profile(activity, max_duration=None):
     """Compute the power profile for an activity.
 
     Parameters
     ----------
     activity : DataFrame
-        A pandas DataFrame with a ``'power'`` column and the indices are the
-        information about time. The activity can be read with
+        A pandas DataFrame with at least a ``'power'`` column and the indices
+        are the information about time. The activity can be read with
         :func:`skcycling.io.bikeread`.
 
     max_duration : datetime-like, int, or str, optional
         The maximum duration for which the power-profile should be computed. By
         default, it will be computed for the duration of the activity. An
         integer represents seconds.
-
-    n_jobs : int, (default=1)
-        The number of workers to use.
 
     Returns
     -------
@@ -80,12 +80,12 @@ def activity_power_profile(activity, max_duration=None, n_jobs=1):
     >>> from skcycling.extraction import activity_power_profile
     >>> power_profile = activity_power_profile(bikeread(load_fit()[0]))
     >>> power_profile.head() # doctest : +NORMALIZE_WHITESPACE
-    00:00:01    500.000000
-    00:00:02    475.500000
-    00:00:03    469.333333
-    00:00:04    464.000000
-    00:00:05    463.000000
-    Freq: S, Name: 2014-05-07 00:00:00, dtype: float64
+    cadence  00:00:01    78.000000
+             00:00:02    64.000000
+             00:00:03    62.666667
+             00:00:04    62.500000
+             00:00:05    64.400000
+    Name: 2014-05-07 12:26:22, dtype: float64
 
     """
     if max_duration is None:
@@ -95,13 +95,32 @@ def activity_power_profile(activity, max_duration=None, n_jobs=1):
     elif isinstance(max_duration, six.string_types):
         max_duration = pd.Timestamp(max_duration)
 
-    power_profile = Parallel(n_jobs=n_jobs)(
-        delayed(max_mean_power_interval)(activity['power'].values, duration)
-        for duration in range(1, _time2int(max_duration)))
+    activity_power = activity['power']
+    activity_complement = activity.drop(['power'], axis=1)
 
-    return pd.Series(
-        power_profile,
-        index=pd.timedelta_range("00:00:01",
-                                 timedelta(seconds=_time2int(max_duration)-1),
-                                 freq='s'),
-        name=pd.Timestamp(activity.index[0].date()))
+    # use the threading backend since we release the GIL.
+    power_profile, power_profile_idx = zip(
+        *[max_mean_power_interval(activity_power.values, duration)
+          for duration in range(1, _time2int(max_duration))])
+    power_profile = np.array(power_profile)
+    power_profile_idx = np.array(power_profile_idx)
+
+    series_index = pd.timedelta_range(
+        "00:00:01", timedelta(seconds=_time2int(max_duration) - 1), freq='s')
+    series_name = pd.Timestamp(activity.index[0])
+
+    # if some additional data are available, we will add them as them on the
+    # side of the power-profile.
+    if not activity_complement.empty:
+        complement_data = {col: pd.Series(
+            _associated_data_power_profile(activity_complement[col].values,
+                                           power_profile_idx,
+                                           np.arange(1, _time2int(max_duration))),
+            index=series_index, name=series_name)
+                           for col in activity_complement.columns}
+        complement_data['power'] = pd.Series(power_profile, index=series_index,
+                                             name=series_name)
+        return pd.concat(complement_data)
+
+    else:
+        return pd.Series(power_profile, index=series_index, name=series_name)
