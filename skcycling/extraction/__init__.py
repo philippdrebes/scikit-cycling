@@ -7,6 +7,14 @@ information from cycling data.
 #          Cedric Lemaitre
 # License: BSD 3 clause
 
+from .gradient import acceleration
+from .gradient import gradient_elevation
+from .gradient import gradient_heart_rate
+
 from .power_profile import activity_power_profile
 
-__all__ = ['activity_power_profile']
+
+__all__ = ['acceleration',
+           'gradient_elevation',
+           'gradient_heart_rate',
+           'activity_power_profile']
