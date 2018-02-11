@@ -32,6 +32,9 @@ Extraction
    :template: function.rst
 
    extraction.activity_power_profile
+   extraction.acceleration
+   extraction.gradient_elevation
+   extraction.gradient_heart_rate
 
 .. _metrics_ref:
 
