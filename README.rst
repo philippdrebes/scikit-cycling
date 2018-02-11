@@ -11,6 +11,9 @@ Scikit-cycling
     :target: http://scikit-cycling.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://codecov.io/gh/scikit-cycling/scikit-cycling/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/scikit-cycling/scikit-cycling
+
 Installation
 ------------
 
