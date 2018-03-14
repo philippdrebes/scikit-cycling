@@ -35,3 +35,11 @@ matrix:
 install: source build_tools/travis/install.sh
 script: bash build_tools/travis/test_script.sh
 after_success: source build_tools/travis/after_success.sh
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/f53515270da68e1b5ec6
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always
