@@ -19,6 +19,11 @@ def strava_power_model(activity, cyclist_weight, bike_weight=6.8,
                        use_acceleration=False):
     """Strava model used to estimate power.
 
+    It corresponds the mathematical formulation which add all forces applied to
+    a cyclist in movement.
+
+    Read more in the :ref:`User Guide <strava>`.
+
     Parameters
     ----------
     activity : DataFrame
@@ -58,7 +63,29 @@ def strava_power_model(activity, cyclist_weight, bike_weight=6.8,
     References
     ----------
     .. [1] How Strava Calculates Power
-    https://support.strava.com/hc/en-us/articles/216917107-How-Strava-Calculates-Power
+       https://support.strava.com/hc/en-us/articles/216917107-How-Strava-Calculates-Power
+
+    Examples
+    --------
+    >>> from skcycling.datasets import load_fit
+    >>> from skcycling.io import bikeread
+    >>> from skcycling.model import strava_power_model
+    >>> ride = bikeread(load_fit()[0])
+    >>> power = strava_power_model(ride, cyclist_weight=72)
+    >>> print(power['2014-05-07 12:26:28':
+    ...             '2014-05-07 12:26:38'])  # Show 10 sec of estimated power
+    2014-05-07 12:26:28    196.567898
+    2014-05-07 12:26:29    198.638094
+    2014-05-07 12:26:30    191.444894
+    2014-05-07 12:26:31     26.365864
+    2014-05-07 12:26:32     89.826104
+    2014-05-07 12:26:33    150.842325
+    2014-05-07 12:26:34    210.083958
+    2014-05-07 12:26:35    331.573965
+    2014-05-07 12:26:36    425.013711
+    2014-05-07 12:26:37    428.806914
+    2014-05-07 12:26:38    425.410451
+    Freq: S, dtype: float64
 
     """
     if 'gradient-elevation' not in activity.columns:

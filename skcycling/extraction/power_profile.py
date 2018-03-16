@@ -54,6 +54,8 @@ def _time2int(dt):
 def activity_power_profile(activity, max_duration=None):
     """Compute the power profile for an activity.
 
+    Read more in the :ref:`User Guide <activity_power_profile>`.
+
     Parameters
     ----------
     activity : DataFrame
@@ -70,6 +72,12 @@ def activity_power_profile(activity, max_duration=None):
     -------
     power_profile : Series
         A pandas Series containing the power-profile.
+
+    References
+    ----------
+    .. [1] Pinot, J., and F. Grappe. "The record power profile to assess
+       performance in elite cyclists." International journal of sports medicine
+       32.11 (2011): 839-844.
 
     Examples
     --------
