@@ -47,7 +47,7 @@ Information to install, test, and contribute to the package.
 -------------------------------
 
 The main documentation. This contains an in-depth description of the methods
-used in `scikit-cycling` and their purpose.
+used in ``scikit-cycling`` and their purpose.
 
 `API Documentation <api.html>`_
 -------------------------------
@@ -65,9 +65,9 @@ complements the `User Guide <user_guide.html>`_.
 `What's new <whats_new.html>`_
 ------------------------------
 
-Log of the scikit-cycling history.
+Log of the ``scikit-cycling`` history.
 
 `About scikit-cycling <about.html>`_
 --------------------------------------
 
-Just to know about history of scikit-cycling.
+Just to know about history of ``scikit-cycling``.
