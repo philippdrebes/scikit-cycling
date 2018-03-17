@@ -18,7 +18,7 @@ with codecs.open('README.rst', encoding='utf-8-sig') as f:
 MAINTAINER = 'G. Lemaitre'
 MAINTAINER_EMAIL = 'g.lemaitre58@gmail.com'
 URL = 'https://github.com/scikit-cycling/scikit-cycling'
-LICENSE = 'MIT'
+LICENSE = 'BSD3'
 DOWNLOAD_URL = 'https://github.com/scikit-cycling/scikit-cycling'
 INSTALL_REQUIRES = ['numpy', 'scipy', 'pandas', 'scikit-learn', 'six',
                     'joblib', 'fitparse', 'cython']
