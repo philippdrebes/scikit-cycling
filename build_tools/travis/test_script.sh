@@ -14,6 +14,7 @@ run_tests(){
     mkdir -p $TEST_DIR
     # We need the setup.cfg for the nose settings
     cp setup.cfg $TEST_DIR
+    cp .coveragerc $TEST_DIR
     cd $TEST_DIR
 
     python --version
