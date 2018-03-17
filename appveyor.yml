@@ -31,4 +31,4 @@ install:
 test_script:
   - mkdir for_test
   - cd for_test
-  - pytest --pyargs skcycling --cov-report term-missing --cov=skcycling
+  - pytest --pyargs skcycling --cov-report term-missing --cov=skcycling --cov-config .coveragerc

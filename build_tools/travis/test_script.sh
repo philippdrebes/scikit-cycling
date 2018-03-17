@@ -21,7 +21,7 @@ run_tests(){
     python -c "import scipy; print('scipy %s' % scipy.__version__)"
     python -c "import multiprocessing as mp; print('%d CPUs' % mp.cpu_count())"
 
-    py.test --cov=$MODULE -r sx --pyargs $MODULE
+    py.test --cov=$MODULE -r sx --pyargs $MODULE --cov-config .coveragerc
 
     # TODO: Test doc
     # cd $OLDPWD
