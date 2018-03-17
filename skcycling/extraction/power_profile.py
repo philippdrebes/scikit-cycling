@@ -88,7 +88,8 @@ def activity_power_profile(activity, max_duration=None):
         complement_data = {col: pd.Series(
             _associated_data_power_profile(activity_complement[col].values,
                                            power_profile_idx,
-                                           np.arange(1, max_duration.seconds)),
+                                           np.arange(1, max_duration.seconds,
+                                                     dtype=int)),
             index=series_index, name=series_name)
                            for col in activity_complement.columns}
         complement_data['power'] = pd.Series(power_profile, index=series_index,
