@@ -48,3 +48,4 @@ containing missing data::
 .. topic:: Examples:
 
     * :ref:`sphx_glr_auto_examples_input_output_plot_bikeread_usage.py`
+    * :ref:`sphx_glr_auto_examples_input_output_plot_activity_data.py`
