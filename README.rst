@@ -37,12 +37,22 @@ Scikit-cycling requires:
 Installation
 ~~~~~~~~~~~~
 
-You can install the package by cloning the source::
+``scikit-cycling`` is currently available on the PyPi’s reporitories and you can
+install it via pip::
+
+  pip install -U scikit-cycling
+
+The package is release also in conda-forge::
+
+  conda install -c conda-forge scikit-cycling
+
+If you prefer, you can clone it and run the ``setup.py`` file. Use the
+following commands to get a copy from Github and install all dependencies::
 
   git clone https://github.com/scikit-cycling/scikit-cycling.git
   cd scikit-cycling
   pip install .
 
-This is also possible to directly install through pip::
+Or install using ``pip`` and GitHub::
 
-  pip install git+https://github.com/scikit-cycling/scikit-cycling.git
+  pip install -U git+https://github.com/scikit-cycling/scikit-cycling.git

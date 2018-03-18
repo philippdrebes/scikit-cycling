@@ -4,12 +4,25 @@ Getting Started
 Install
 -------
 
-The install of ``scikit-cycling`` is almost straightforward. You need to clone
-it from GitHub_::
+``scikit-cycling`` is currently available on the PyPi’s reporitories and you can
+install it via pip::
 
-  $ git clone https://github.com/glemaitre/scikit-cycling.git
-  $ cd scikit-cycling
-  $ pip install .
+  pip install -U scikit-cycling
+
+The package is release also in conda-forge::
+
+  conda install -c conda-forge scikit-cycling
+
+If you prefer, you can clone it and run the ``setup.py`` file. Use the
+following commands to get a copy from Github and install all dependencies::
+
+  git clone https://github.com/scikit-cycling/scikit-cycling.git
+  cd scikit-cycling
+  pip install .
+
+Or install using ``pip`` and GitHub::
+
+  pip install -U git+https://github.com/scikit-cycling/scikit-cycling.git
 
 Test and coverage
 -----------------
