@@ -39,14 +39,26 @@ Extraction
 
 .. _metrics_ref:
 
-Extraction
-==========
+Metrics
+=======
 
 .. automodule:: skcycling.metrics
     :no-members:
     :no-inherited-members:
 
 .. currentmodule:: skcycling
+
+.. autosummary::
+   :toctree: generated/
+   :template: function.rst
+
+   metrics.normalized_power_score
+   metrics.intensity_factor_score
+   metrics.training_stress_score
+   metrics.training_load_score
+   metrics.mpa2ftp
+   metrics.ftp2mpa
+   metrics.aerobic_meta_model
 
 Single cycling activity
 -----------------------
